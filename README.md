@@ -1,4 +1,3 @@
 # django-draft
 # Collaborateurs :
-Paula
-Gabriel
+Paula Ferreira
