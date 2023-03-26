@@ -1,3 +1,4 @@
 # django-draft
 # Collaborateurs :
-Paula Ferreira
+* Paula Ferreira
+* Gabriel Ménévis
