@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "e-commerce"
+version = "1.0.0"
+description = ""
+authors = ["Paula Ferreira <paulakaferreira@gmail.com>", "Gabriel Menevis <youremail@example.com>"]
+readme = "README.md"
+packages = [{include = "e_commerce"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+django = "^4.1.7"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
