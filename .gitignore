@@ -1,0 +1,8 @@
+# Ignore pycache
+*.pyc
+
+# Ignore database files
+*.sqlite3
+
+# Ignore vscode files
+.vscode/*
