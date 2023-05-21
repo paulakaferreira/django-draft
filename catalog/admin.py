@@ -9,3 +9,11 @@ class CategoryAdmin(admin.ModelAdmin):
 @admin.register(models.Product)
 class ProductAdmin(admin.ModelAdmin):
     form = forms.ProductForm
+
+@admin.register(models.Cart)
+class CartAdmin(admin.ModelAdmin):
+    form = forms.CartForm
+
+@admin.register(models.CartProduct)
+class CartProductAdmin(admin.ModelAdmin):
+    form = forms.CartProductForm
