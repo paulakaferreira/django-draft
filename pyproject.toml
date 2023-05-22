@@ -2,7 +2,7 @@
 name = "e-commerce"
 version = "1.0.0"
 description = ""
-authors = ["Paula Ferreira <paulakaferreira@gmail.com>", "Gabriel Menevis <youremail@example.com>"]
+authors = ["Paula Ferreira <paulakaferreira@gmail.com>", "Gabriel Menevis <gabriel.menevis@gmail.com>"]
 readme = "README.md"
 packages = [{include = "e_commerce"}]
 
