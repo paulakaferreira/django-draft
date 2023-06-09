@@ -10,7 +10,13 @@ class Cart(models.Model):
     total = models.PositiveIntegerField(default=0)
 
     def __str__(self):
-        return f"Panier de {self.customer}"
+        return f"{self.customer}'s cart"
+    
+    def is_empty(self):
+        if self.products.all():
+            return False
+        else:
+            return True
 
 class CartProduct(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
