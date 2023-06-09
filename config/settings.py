@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 ]
 
-MY_APPS = ['catalog', 'customer', 'cart']
+MY_APPS = ['catalog', 'customer', 'cart', 'orders']
 
 INSTALLED_APPS += MY_APPS
 
