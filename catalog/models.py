@@ -1,6 +1,5 @@
 from django.db import models
 from django.utils.text import slugify
-
 from customer.models import CustomerProfile
 
 
@@ -20,6 +19,9 @@ class SlugModel(models.Model):
         super().save(*args, **kwargs)
 
 class Category(SlugModel):
+
+    description = models.CharField(max_length=500, blank=True)
+    supercategory = models.ForeignKey('self', null=True, on_delete=models.SET_NULL, related_name='subcategories')
 
     class Meta:
         ordering = ('name',)
@@ -45,20 +47,15 @@ class Product(SlugModel):
 
     def __str__(self):
         return self.name
-    
-class Cart(models.Model):
-    products = models.ManyToManyField(Product, through="CartProduct")
-    customer = models.OneToOneField(CustomerProfile, on_delete=models.CASCADE, related_name='cart')
-    total = models.PositiveIntegerField(default=0)
 
-    def __str__(self):
-        return f"Panier de {self.customer}"
-
-class CartProduct(models.Model):
+class Review(models.Model):
+    title = models.CharField(max_length=50, blank=False)
+    comment = models.CharField(max_length=500, blank=False)
+    notation = models.PositiveIntegerField(default=5)
+    created = models.DateTimeField(auto_now_add=True)
+    last_updated = models.DateTimeField(auto_now_add=True)
+    customer = models.ForeignKey(CustomerProfile, on_delete=models.SET_NULL, null=True)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
-    number = models.PositiveIntegerField(default=1)
-    subtotal = models.PositiveIntegerField(default=0)
 
     def __str__(self):
-        return f"{self.product} / {self.cart}"
+        return f"{self.customer}'s review on {self.product}"
