@@ -1,0 +1,28 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Registration</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <h1>User Registration</h1>
+    <form method="post">
+        {% csrf_token %}
+        
+        <!-- User Registration Form -->
+        {{ form.as_p }}
+        
+        <!-- Customer Profile Form -->
+        <h2>Customer Profile</h2>
+        {{ profile_form.as_p }}
+        
+        <!-- Address Form -->
+        <h2>Address</h2>
+        {{ address_form.as_p }}
+        
+        <button type="submit">Register</button>
+    </form>
+</body>
+</html>
