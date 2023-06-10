@@ -34,7 +34,6 @@ class Category(SlugModel):
 class Product(SlugModel):
     categories = models.ManyToManyField(Category, related_name='products')
     description = models.TextField(blank=True)
-    #image = models.ImageField(upload_to='products/%Y/%m/%d', blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     available = models.BooleanField(default=True)
     created = models.DateTimeField(auto_now_add=True)

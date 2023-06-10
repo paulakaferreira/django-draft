@@ -10,6 +10,19 @@ body {
     text-align: center;
 }
 
+.content-container li {
+    display: flex;
+    max-width: 800px; /* Adjust the maximum width as needed */
+    margin: 0 auto;
+    list-style-type: none;
+    background-color: #ffffff;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    text-align: center;
+}
+
 form {
     display: inline-block;
     background-color: #ffffff;
@@ -39,7 +52,8 @@ button[type="submit"]:hover {
     background-color: #F4F4F4;
     position: fixed;
     top: 0;
-    right: 0;
+    left: 0;
+    width: 100%;
 }
 
 .header-content {
