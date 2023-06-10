@@ -1,11 +1,24 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html>
 <head>
     <title>Home Page</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
 </head>
 <body>
-    <!-- Home page content -->
-    <h1>Welcome to the Home Page</h1>
-    <!-- Other HTML content -->
+    <h1>Welcome to our E-commerce Store!</h1>
+
+    <h2>Featured Products</h2>
+    <ul>
+        {% for product in products %}
+        <li>
+            <h3>{{ product.name }}</h3>
+            <p>Description: {{ product.description }}</p>
+            <p>Price: {{ product.price }}</p>
+        </li>
+        {% endfor %}
+    </ul>
 </body>
 </html>
+

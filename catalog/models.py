@@ -21,7 +21,7 @@ class SlugModel(models.Model):
 class Category(SlugModel):
 
     description = models.CharField(max_length=500, blank=True)
-    supercategory = models.ForeignKey('self', null=True, on_delete=models.SET_NULL, related_name='subcategories')
+    supercategory = models.ForeignKey('self', null=True, blank=True, on_delete=models.SET_NULL, related_name='subcategories')
 
     class Meta:
         ordering = ('name',)
