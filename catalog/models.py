@@ -39,6 +39,7 @@ class Product(SlugModel):
     available = models.BooleanField(default=True)
     created = models.DateTimeField(auto_now_add=True)
     last_updated = models.DateTimeField(auto_now=True)
+    image = models.ImageField(upload_to='product_images/', blank=True, null=True)
 
     class Meta:
         ordering = ('name',)

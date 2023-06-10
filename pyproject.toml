@@ -9,6 +9,7 @@ packages = [{include = "e_commerce"}]
 [tool.poetry.dependencies]
 python = "^3.10"
 django = "^4.1.7"
+pillow = "^9.5.0"
 
 
 [build-system]
