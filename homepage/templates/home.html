@@ -7,6 +7,12 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
 </head>
 <body>
+    <header class="header-top">
+        <div class="header-content">
+            <a href="{% url 'customer:login' %}" class="login-button">Login</a>
+        </div>
+    </header>
+
     <h1>Welcome to our E-commerce Store!</h1>
 
     <h2>Featured Products</h2>
@@ -21,4 +27,5 @@
     </ul>
 </body>
 </html>
+
 

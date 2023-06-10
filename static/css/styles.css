@@ -30,3 +30,24 @@ button[type="submit"]:hover {
     background-color: #2980b9;
 }
 
+.header-top {
+    background-color: #F4F4F4;
+    padding: 10px;
+    margin-top: 0;
+}
+
+.header-content {
+    text-align: right;
+}
+
+.login-button {
+    background-color: #3498db;
+    color: #ffffff;
+    padding: 8px 16px;
+    text-decoration: none;
+    border-radius: 4px;
+}
+
+.login-button:hover {
+    background-color: #2980b9;
+}
