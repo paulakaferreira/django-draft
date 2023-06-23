@@ -1,12 +1,19 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Registration Success</title>
-</head>
-<body>
-    <h1>Registration Successful</h1>
-    <p>Thank you for registering!</p>
-    <p>Your account has been created successfully.</p>
-    <p>You can now login to your account.</p>
-</body>
-</html>
+{% extends 'base.html' %}
+
+{% load bootstrap5 %}
+
+<title>{% block title %}Registration successful{% endblock %}</title>
+
+{% block content %}
+
+<div>
+
+    <p>
+        Thank you for registering!<br/>
+        Your account has been created successfully.<br/>
+        You can now login to your account.<br/>
+    </p>
+    <a href="{% url 'customer:login' %}" class="btn btn-primary">Login</a>
+</div>
+
+{% endblock %}
