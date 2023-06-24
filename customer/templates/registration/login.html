@@ -1,8 +1,9 @@
 {% extends 'base.html' %}
 
-    <title>{% block title %}Login{% endblock %}</title>
-
 {% block content %}
+
+    <h1>{% block h1 %}Login{% endblock %}</h1>
+
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
