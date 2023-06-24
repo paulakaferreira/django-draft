@@ -1,12 +1,8 @@
-{% load static %}
+{% extends 'base.html' %}
 
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Home Page</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
-</head>
-<body>
+    <title>{% block title %}Home{% endblock %}</title>
+
+{% block content %}
     <header class="header-top">
         <div class="header-content">
             <a href="{% url 'customer:login' %}" class="login-button">Login</a>
@@ -29,8 +25,4 @@
             {% endfor %}
         </ul>
     </div>
-</body>
-</html>
-
-
-
+{% endblock %}
