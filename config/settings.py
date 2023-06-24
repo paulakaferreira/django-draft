@@ -16,6 +16,8 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+PROJECT_DIR = Path(__file__).resolve(strict=True).parent
+
 MEDIA_ROOT = BASE_DIR / 'media'
 
 
@@ -42,7 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 ]
 
-MY_APPS = ['catalog', 'customer', 'cart', 'orders', 'homepage']
+MY_APPS = ['catalog', 'customer', 'cart', 'orders', 'homepage', 'bootstrap5']
 
 INSTALLED_APPS += MY_APPS
 
@@ -61,7 +63,9 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            os.path.join(PROJECT_DIR, 'templates'),
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
