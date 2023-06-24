@@ -6,15 +6,22 @@
 
     <div class="content-container">
         <h2>Featured Products</h2>
-        <ul>
-            {% for product in products %}
-            <li>
-                <h3>{{ product.name }}</h3>
-                <img src="{{ product.image.url }}" alt="{{ product.name }}">
-                <p>Description: {{ product.description }}</p>
-                <p>Price: {{ product.price }}</p>
-            </li>
-            {% endfor %}
-        </ul>
+        {% if products %}
+        <div class="container marketing">
+            <div class="row">
+                {% for product in products %}
+                <div class="col-lg-4" style="text-align: center;">
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}" height="140">
+                    <h2 class="fw-normal">{{ product.name }}</h2>
+                    <p>{{ product.description }}</p>
+                    <p>Price : {{ product.price }}$</p>
+                    <p><a class="btn btn-secondary" href="#">View details &raquo;</a></p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% else %}
+        <p>No products to display... Come back later!</p>
+        {% endif %}
     </div>
 {% endblock %}
