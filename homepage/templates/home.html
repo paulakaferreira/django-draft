@@ -2,19 +2,31 @@
 
 {% block content %}
 
-    <h1>{% block h1 %}Home{% endblock %}</h1>
+    <h1 style="margin-top: 15px; margin-bottom: 15px;">{% block h1 %}Home{% endblock %}</h1>
 
     <div class="content-container">
-        <h2>Featured Products</h2>
+        <h2 style="margin-top: 15px; margin-bottom: 15px;">Featured Products</h2>
         {% if products %}
-        <div class="container marketing">
+        <div class="container marketing" style="margin-top:30px">
             <div class="row">
                 {% for product in products %}
                 <div class="col-lg-4" style="text-align: center;">
+                    {% if product.image %}
                     <img src="{{ product.image.url }}" alt="{{ product.name }}" height="140">
-                    <h2 class="fw-normal">{{ product.name }}</h2>
-                    <p>{{ product.description }}</p>
-                    <p>Price : {{ product.price }}$</p>
+                    {% else %}
+                    <img src="media/product_images/placeholder.png" alt="{{ product.name }}" height="140">
+                    {% endif %}
+                    <!-- TODO : cut product name / description if it overflows div height -->
+                    <div style="height: 200px">
+                        <h3 class="fw-normal">{{ product.name }}</h3>
+                        <p>{{ product.description }}</p>
+                        <p>Price : {{ product.price }}$</p>
+                        <p>Categories : 
+                            {% for category in product.categories.all %}
+                            <a href="#">{{ category.name }}</a>
+                            {% endfor %}
+                        </p>
+                    </div>
                     <p><a class="btn btn-secondary" href="#">View details &raquo;</a></p>
                 </div>
                 {% endfor %}
