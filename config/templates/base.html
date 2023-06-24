@@ -57,9 +57,21 @@
 
 {% endblock %}
 
-<div class="container">
-  {% autoescape off %}{% bootstrap_messages %}{% endautoescape %}
+<body class="d-flex flex-column min-vh-100">
 
-  {% block content %}(no content){% endblock %}
-</div>
+  <div class="container">
+    {% autoescape off %}{% bootstrap_messages %}{% endautoescape %}
+
+    {% block content %}(no content){% endblock %}
+  </div>
+
+  {% block base %}
+  <footer class="modal-footer mt-auto" style="background-color: black; color: white;">
+    <p class="float-end"><a href="#">Back to top</a></p>
+    <p>&copy; 2023 Paula Ferreira, Gabriel Ménévis &middot; <a href="#">Privacy</a> &middot; <a href="#">Terms</a></p>
+  </footer>
+  {% endblock %}
+
+</body>
+
 {% endblock %}
