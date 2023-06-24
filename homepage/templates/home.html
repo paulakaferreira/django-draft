@@ -23,7 +23,7 @@
                         <p>Price : ${{ product.price }}</p>
                         <p>Categories : 
                             {% for category in product.categories.all %}
-                            <a href="#">{{ category.name }}</a>
+                            <a href="{% url 'catalog:category_view' slug=category.slug %}">{{ category.name }}</a>
                             {% endfor %}
                         </p>
                     </div>

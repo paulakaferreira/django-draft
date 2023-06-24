@@ -8,3 +8,7 @@ def product_view(request, slug):
     context = {'product': product}
     return render(request, 'product.html', context)
 
+def category_view(request, slug):
+    category = get_object_or_404(Category, slug=slug)
+    context = {'category': category}
+    return render(request, 'category.html', context)
