@@ -19,7 +19,7 @@
                     <!-- TODO : cut product name / description if it overflows div height -->
                     <div style="height: 200px">
                         <h3 class="fw-normal">{{ product.name }}</h3>
-                        <p>{{ product.description }}</p>
+                        <p>{{ product.get_short_description }}</p>
                         <p>Price : ${{ product.price }}</p>
                         <p>Categories : 
                             {% for category in product.categories.all %}

@@ -47,6 +47,12 @@ class Product(SlugModel):
 
     def __str__(self):
         return self.name
+    
+    def get_short_description(self):
+        if len(self.description) <= 100:
+            return self.description
+        else:
+            return self.description[:97]+'...'
 
 class Review(models.Model):
     title = models.CharField(max_length=50, blank=False)
