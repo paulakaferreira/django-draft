@@ -2,38 +2,40 @@
 
 {% block content %}
 
-    <h1 style="margin-top: 15px; margin-bottom: 15px;">{% block h1 %}Home{% endblock %}</h1>
+<h1 style="margin-top: 15px; margin-bottom: 15px;">{% block h1 %}Home{% endblock %}</h1>
+<p><a class="btn btn-secondary" href="{% url 'cart:cart_view' %}">Cart</a></p>
 
-    <div class="content-container">
-        <h2 style="margin-top: 15px; margin-bottom: 15px;">Featured Products</h2>
-        {% if products %}
-        <div class="container marketing" style="margin-top:30px">
-            <div class="row">
-                {% for product in products %}
-                <div class="col-lg-4" style="text-align: center;">
-                    {% if product.image %}
-                    <img src="{{ product.image.url }}" alt="{{ product.name }}" height="140">
-                    {% else %}
-                    <img src="/media/product_images/placeholder.png" alt="{{ product.name }}" height="140">
-                    {% endif %}
-                    <!-- TODO : cut product name / description if it overflows div height -->
-                    <div style="height: 200px">
-                        <h3 class="fw-normal">{{ product.name }}</h3>
-                        <p>{{ product.get_short_description }}</p>
-                        <p>Price : ${{ product.price }}</p>
-                        <p>Categories : 
-                            {% for category in product.categories.all %}
-                            <a href="{% url 'catalog:category_view' slug=category.slug %}">{{ category.name }}</a>
-                            {% endfor %}
-                        </p>
-                    </div>
-                    <p><a class="btn btn-secondary" href="{% url 'catalog:product_view' slug=product.slug %}">View details &raquo;</a></p>
+<div class="content-container">
+    <h2 style="margin-top: 15px; margin-bottom: 15px;">Featured Products</h2>
+    {% if products %}
+    <div class="container marketing" style="margin-top:30px">
+        <div class="row">
+            {% for product in products %}
+            <div class="col-lg-4" style="text-align: center;">
+                {% if product.image %}
+                <img src="{{ product.image.url }}" alt="{{ product.name }}" height="140">
+                {% else %}
+                <img src="/media/product_images/placeholder.png" alt="{{ product.name }}" height="140">
+                {% endif %}
+                <!-- TODO : cut product name / description if it overflows div height -->
+                <div style="height: 200px">
+                    <h3 class="fw-normal">{{ product.name }}</h3>
+                    <p>{{ product.get_short_description }}</p>
+                    <p>Price : ${{ product.price }}</p>
+                    <p>Categories :
+                        {% for category in product.categories.all %}
+                        <a href="{% url 'catalog:category_view' slug=category.slug %}">{{ category.name }}</a>
+                        {% endfor %}
+                    </p>
                 </div>
-                {% endfor %}
+                <p><a class="btn btn-secondary" href="{% url 'catalog:product_view' slug=product.slug %}">View details
+                        &raquo;</a></p>
             </div>
+            {% endfor %}
         </div>
-        {% else %}
-        <p>No products to display... Come back later!</p>
-        {% endif %}
     </div>
+    {% else %}
+    <p>No products to display... Come back later!</p>
+    {% endif %}
+</div>
 {% endblock %}

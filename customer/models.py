@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 
 class CustomerProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+    # cart = models.OneToOneField(cart.models.Cart, on_delete=models.CASCADE, related_name='customer')
     # profile_picture = models.ImageField(upload_to='profile_pictures/')
     date_of_birth = models.DateField(null=True, blank=True)
     phone_number = models.CharField(max_length=20, blank=True)
