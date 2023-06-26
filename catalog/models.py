@@ -47,6 +47,12 @@ class Product(SlugModel):
 
     def __str__(self):
         return self.name
+    
+    def get_short_description(self):
+        if len(self.description) <= 100:
+            return self.description
+        else:
+            return self.description[:97]+'...'
 
 class Review(models.Model):
     title = models.CharField(max_length=50, blank=False)
@@ -55,7 +61,7 @@ class Review(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     last_updated = models.DateTimeField(auto_now_add=True)
     customer = models.ForeignKey(CustomerProfile, on_delete=models.SET_NULL, null=True)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='reviews')
 
     def __str__(self):
         return f"{self.customer}'s review on {self.product}"

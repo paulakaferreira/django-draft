@@ -2,25 +2,25 @@
 
 {% load bootstrap5 %}
 
-    <title>{% block title %}User Registration{% endblock %}</title>
-
 {% block content %}
+
+    <h1>{% block h1 %}Register{% endblock %}</h1>
 
     <form method="post">
         {% csrf_token %}
         
         <!-- User Registration Form -->
-        {{ form.as_p }}
+        {% bootstrap_form form %}
         
         <!-- Customer Profile Form -->
         <h2>Customer Profile</h2>
-        {{ profile_form.as_p }}
+        {% bootstrap_form profile_form %}
         
         <!-- Address Form -->
         <h2>Address</h2>
-        {{ address_form.as_p }}
+        {% bootstrap_form address_form %}
         
-        <button type="submit" class="btn btn-primary">Register</button>
+        {% buttons submit='Register' reset='Cancel' %}{% endbuttons %}
     </form>
 
 {% endblock %}

@@ -3,17 +3,79 @@
 {% load bootstrap5 %}
 
 {% block bootstrap5_content %}
-<div class="container">
-  <h1>{% block title %}(no title){% endblock %}</h1>
 
-  <p>
-    <a href="{% url 'home' %}">home</a>
-  </p>
+<title>{% block title %}{% block h1 %}(no title){% endblock %} - Name Placeholder{% endblock %}</title>
 
-  {% autoescape off %}{% bootstrap_messages %}{% endautoescape %}
+{% block navbar %}
 
-  {% block content %}(no content){% endblock %}
+<nav class="navbar navbar-expand navbar-dark bg-dark" aria-label="Second navbar example">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="/">Name Placeholder</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample02" aria-controls="navbarsExample02" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
-  {% block content2 %}<p>test</p>{% endblock %}
-</div>
+    <div class="collapse navbar-collapse" id="navbar">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item">
+          {% if request.path == '/' %}
+          <a class="nav-link active" aria-current="page" href="/">Home</a>
+          {% else %}
+          <a class="nav-link" href="/">Home</a>
+          {% endif %}
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Catalog</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">Categories</a>
+          <ul class="dropend dropdown-menu">
+            {% for supercategory in supercategories %}
+            <li><a class="dropdown-item" style="font-weight: bold;" href="{% url 'catalog:category_view' slug=supercategory.slug %}">{{ supercategory.name }}</a></li>
+            {% for subcategory in supercategory.subcategories.all %}
+            <li><a class="dropdown-item" style="font-style: italic; text-indent: 1em;" href="{% url 'catalog:category_view' slug=subcategory.slug %}">{{ subcategory.name }}</a></li>
+            {% endfor %}
+            {% endfor %}
+          </ul>
+        </li>
+      </ul>
+      <form role="search">
+        <input class="form-control" type="search" placeholder="Search" aria-label="Search">
+      </form>
+      <ul class="navbar-nav mx-3">
+        <li class="nav-item mx-2">
+          <a class="nav-link active" href="{% url 'customer:register' %}">Register</a>
+        </li>
+        <li class="nav-item mx-2">
+          {% if not user.is_authenticated %}
+            <a class="nav-link active" href="{% url 'customer:login' %}">Login</a>
+          {% else %}
+            <a class="nav-link active" href="{% url 'customer:logout' %}">Logout</a>
+          {% endif %}
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+{% endblock %}
+
+<body class="d-flex flex-column min-vh-100">
+
+  <div class="container">
+    {% autoescape off %}{% bootstrap_messages %}{% endautoescape %}
+
+    {% block content %}(no content){% endblock %}
+
+  </div>
+
+  {% block footer %}
+  <footer class="modal-footer mt-auto" style="background-color: black; color: white;">
+    <p class="float-end"><a href="#">Back to top</a></p>
+    <p>&copy; 2023 Paula Ferreira, Gabriel Ménévis &middot; <a href="#">Privacy</a> &middot; <a href="#">Terms</a></p>
+  </footer>
+  {% endblock %}
+
+</body>
+
 {% endblock %}
