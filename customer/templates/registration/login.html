@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 
+{% load bootstrap5 %}
+
 {% block messages %}
     {% if request.GET.next %}
         {% if request.GET.next == '/cart/' %}
@@ -21,11 +23,12 @@
 
 {% block content %}
 
-<h1 class="my-3">{% block h1 %}Login{% endblock %}</h1>
-
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn btn-primary">Login</button>
-</form>
+<div class="col-md-3">
+    <h1 class="my-3">{% block h1 %}Login{% endblock %}</h1>
+    <form method="post">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        <button type="submit" class="btn btn-primary">Login</button>
+    </form>
+</div>
 {% endblock %}
