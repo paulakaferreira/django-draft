@@ -1,9 +1,21 @@
 {% extends 'base.html' %}
 
-{% block message %}
-{% if request.META.HTTP_REFERER == 'http://127.0.0.1.:8000/cart/' %}
-<p> You have to login to view your cart </p>
-{% endif %}
+{% block messages %}
+    {% if request.GET.next %}
+        {% if request.GET.next == '/cart/' %}
+        <div class="alert alert-warning my-3" role="alert">
+            You have to login to access your cart.
+        </div>
+        {% elif request.GET.next == '/customer/profile/' %}
+        <div class="alert alert-warning my-3" role="alert">
+            You have to login to access your profile.
+        </div>
+        {% else %}
+        <div class="alert alert-warning my-3" role="alert">
+            You have to login to view this page.
+        </div>
+        {% endif %}
+    {% endif %}
 {% endblock %}
 
 

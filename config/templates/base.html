@@ -74,6 +74,8 @@
 <body class="d-flex flex-column min-vh-100">
 
   <div class="container">
+    {% block messages %}{% endblock %}
+
     {% autoescape off %}{% bootstrap_messages %}{% endautoescape %}
 
     {% block content %}(no content){% endblock %}
