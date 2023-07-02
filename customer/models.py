@@ -1,12 +1,22 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.forms import ValidationError
+
+def valid_phone_number(string):
+    """Checks if a string is a valid phone number.
+    
+    Accepts two formats : only digits or '+' followed by digits ; otherwise raises a ValidationError"""
+    if string[0] == '+':
+        if not string[1:].isdigit():
+            raise ValidationError('Not a valid phone number.')
+    elif not string.isdigit():
+        raise ValidationError('Not a valid phone number.')
 
 class CustomerProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    # cart = models.OneToOneField(cart.models.Cart, on_delete=models.CASCADE, related_name='customer')
     # profile_picture = models.ImageField(upload_to='profile_pictures/')
     date_of_birth = models.DateField(null=True, blank=True)
-    phone_number = models.CharField(max_length=20, blank=True)
+    phone_number = models.CharField(max_length=20, blank=True, validators=[valid_phone_number])
     gender = models.CharField(max_length=10, choices=[('male', 'Male'), ('female', 'Female'), ('other', 'Other')], blank=True)
     created = models.DateTimeField(auto_now_add=True)
     last_updated = models.DateTimeField(auto_now=True)
