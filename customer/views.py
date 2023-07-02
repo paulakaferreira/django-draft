@@ -45,5 +45,5 @@ def logout_view(request):
     return redirect('home')
 
 @login_required
-def information_view(request):
-    return render (request, 'account_management/information.html')
+def profile_view(request):
+    return render (request, 'account_management/profile.html')
