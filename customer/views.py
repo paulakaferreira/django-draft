@@ -3,6 +3,7 @@ from django.contrib.auth.forms import UserCreationForm
 from .forms import CustomerProfileForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.decorators import login_required
 
 def register(request):
     if request.method == 'POST':
@@ -42,3 +43,7 @@ def login(request):
 def logout_view(request):
     logout(request)
     return redirect('home')
+
+@login_required
+def information_view(request):
+    return render (request, 'account_management/information.html')
