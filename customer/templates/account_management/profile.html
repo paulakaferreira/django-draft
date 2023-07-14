@@ -13,7 +13,9 @@
             <p class="card-text"><strong>Phone Number:</strong> {{ profile.phone_number }}</p>
             <p class="card-text"><strong>Gender:</strong> {{ profile.gender }}</p>
         </div>
-        <a href="{% url 'customer:edit-profile' %}" class="btn btn-primary edit-button">Edit Profile</a>
+        <div class="d-flex justify-content-between">
+            <a href="{% url 'customer:edit-profile' %}" class="btn btn-primary btn-sm" >Edit Profile</a>
+        </div>
     </div>
 
 
@@ -53,8 +55,8 @@
                 {% endfor %}
             </div>
             <div class="d-flex justify-content-between">
-                <button type="button" id="addAddressButton" class="btn btn-success edit-button">Add Address</button>
-                <button type="button" id="editAddressButton" class="btn btn-primary edit-button" style="display: none">Edit Address</button>
+                <button type="button" id="addAddressButton" class="btn btn-success btn-sm">Add Address</button>
+                <button type="button" id="editAddressButton" class="btn btn-primary btn-sm" style="display: none">Edit Address</button>
             </div>
         </div>
     {% else %}
@@ -63,12 +65,12 @@
             No address information available.
         </div>
         <div class="d-flex justify-content-between">
-            <button type="button" id="addAddressButton" class="btn btn-success edit-button">Add Address</button>
-            <button type="button" id="editAddressButton" class="btn btn-primary edit-button" style="display: none">Edit Address</button>
+            <button type="button" id="addAddressButton" class="btn btn-success btn-sm">Add Address</button>
+            <button type="button" id="editAddressButton" class="btn btn-primary btn-sm" style="display: none">Edit Address</button>
         </div>
     {% endif %}
 
-    <script>
+    <script> // Create tab event
         document.addEventListener('DOMContentLoaded', function() {
             var addressTabs = new bootstrap.Tab(document.getElementById('addressTabs'));
             try {
@@ -113,10 +115,4 @@
         });
     </script>
 
-    <style>
-        .edit-button {
-            width: 150px; /* Adjust the width as per your preference */
-        }
-    </style>
-    
 {% endblock %}
