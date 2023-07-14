@@ -13,6 +13,7 @@
                     <th>Image</th>
                     <th>Price</th>
                     <th>Quantity</th>
+                    <th>Subtotal</th>
                 </tr>
             </thead>
             <tbody>
@@ -22,6 +23,7 @@
                     <td><img src="{{ cart_item.product.image.url }}" alt="{{ cart_item.product.name }}" width="50" height="50"></td>
                     <td>{{ cart_item.product.price }}</td>
                     <td>{{ cart_item.number }}</td>
+                    <td>{{ cart_item.subtotal }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
