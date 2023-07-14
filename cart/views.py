@@ -19,3 +19,14 @@ def add_to_cart(request, product_id):
         cart_item.number += 1
         cart_item.save()
     return redirect('cart:cart_view')
+
+
+@login_required(login_url='/customer/login')
+def remove_from_cart(request, product_id):
+    product = Product.objects.get(id=product_id)
+    customer = request.user.customerprofile
+    cart_item = Cart.objects.get(product=product, customer=customer)
+    if cart_item:
+        cart_item.number -= 1
+        cart_item.save()
+    return redirect('cart:cart_view')

@@ -24,6 +24,9 @@
                     <td>{{ cart_item.product.price }}</td>
                     <td>{{ cart_item.number }}</td>
                     <td>{{ cart_item.subtotal }}</td>
+                    <td>
+                        <a href="{% url 'cart:remove_from_cart' cart_item.product.id %}" class="btn btn-primary btn-sm">Remove unit</a>
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>
