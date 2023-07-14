@@ -2,10 +2,10 @@
 {% load bootstrap5 %}
 
 {% block content %}
-    <h1>Profile</h1>
+    <h1 class="my-3">{% block h1 %}Your profile{% endblock %}</h1>
     <div class="card mb-3">
         <div class="card-header">
-            <h2 class="card-title">Customer Information</h2>
+            <h2 class="card-title">Account Information</h2>
         </div>
         <div class="card-body">
             <p class="card-text"><strong>Username:</strong> {{ profile.user.username }}</p>
