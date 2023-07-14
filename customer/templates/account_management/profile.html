@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+{% load bootstrap5 %}
+
+{% block content %}
+    <h1>Profile</h1>
+    <div class="card mb-3">
+        <div class="card-header">
+            <h2 class="card-title">Customer Information</h2>
+        </div>
+        <div class="card-body">
+            <p class="card-text"><strong>Username:</strong> {{ profile.user.username }}</p>
+            <p class="card-text"><strong>Date of Birth:</strong> {{ profile.date_of_birth }}</p>
+            <p class="card-text"><strong>Phone Number:</strong> {{ profile.phone_number }}</p>
+            <p class="card-text"><strong>Gender:</strong> {{ profile.gender }}</p>
+        </div>
+        <a href="{% url 'customer:edit-profile' %}" class="btn btn-primary edit-button">Edit Profile</a>
+    </div>
+
+
+    <div class="mb-5"></div> <!-- Add vertical margin -->
+
+    {% if addresses %}
+        <div class="card mb-3">
+            <div class="card-header">
+                <h2 class="card-title">Address Information</h2>
+            </div>
+            <ul class="nav nav-tabs" id="addressTabs" role="tablist">
+                {% for address in addresses %}
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link {% if forloop.first %}active{% endif %}"
+                                id="address-tab-{{ forloop.counter0 }}" data-bs-toggle="tab"
+                                data-bs-target="#address-{{ forloop.counter0 }}" type="button" role="tab"
+                                aria-controls="address-{{ forloop.counter0 }}"
+                                aria-selected="{% if forloop.first %}true{% else %}false{% endif %}">
+                            Address {{ forloop.counter }}
+                        </button>
+                    </li>
+                {% endfor %}
+            </ul>
+            <div class="tab-content" id="addressTabsContent">
+                {% for address in addresses %}
+                    <div class="tab-pane fade {% if forloop.first %}show active{% endif %}"
+                         id="address-{{ forloop.counter0 }}" role="tabpanel"
+                         aria-labelledby="address-tab-{{ forloop.counter0 }}">
+                        <div class="card-body">
+                            <p class="card-text"><strong>Street Number:</strong> {{ address.street_number }}</p>
+                            <p class="card-text"><strong>Street:</strong> {{ address.street }}</p>
+                            <p class="card-text"><strong>Postal Code:</strong> {{ address.postal_code }}</p>
+                            <p class="card-text"><strong>City:</strong> {{ address.city }}</p>
+                            <p class="card-text"><strong>Country:</strong> {{ address.country }}</p>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="d-flex justify-content-between">
+                <button type="button" id="addAddressButton" class="btn btn-success edit-button">Add Address</button>
+                <button type="button" id="editAddressButton" class="btn btn-primary edit-button" style="display: none">Edit Address</button>
+            </div>
+        </div>
+    {% else %}
+        <div class="alert alert-info" role="alert">
+
+            No address information available.
+        </div>
+        <div class="d-flex justify-content-between">
+            <button type="button" id="addAddressButton" class="btn btn-success edit-button">Add Address</button>
+            <button type="button" id="editAddressButton" class="btn btn-primary edit-button" style="display: none">Edit Address</button>
+        </div>
+    {% endif %}
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var addressTabs = new bootstrap.Tab(document.getElementById('addressTabs'));
+            try {
+                addressTabs.show();
+            } catch(e) {}
+
+            var editAddressButton = document.getElementById('editAddressButton');
+            var addAddressButton = document.getElementById('addAddressButton');
+
+            editAddressButton.addEventListener('click', function() {
+                try {
+                    var activeTab = document.querySelector('.nav-tabs .nav-link.active');
+                    var tabIndex = Array.from(activeTab.parentElement.children).indexOf(activeTab);
+                    var editAddressUrl = "{% url 'customer:edit-address' %}?current_tab=" + activeTab.id.replace('address-tab-', '');
+                    window.location.href = editAddressUrl;
+                } catch (error) {
+                    var editAddressUrl = "{% url 'customer:edit-address' %}";
+                    window.location.href = editAddressUrl;
+                }
+            });
+
+            addAddressButton.addEventListener('click', function() {
+                var addAddressUrl = "{% url 'customer:edit-address' %}";
+                window.location.href = addAddressUrl;
+            });
+
+            // Check if any tab is selected
+            var tabs = document.querySelectorAll('.nav-tabs .nav-link');
+            var isAnyTabSelected = false;
+            tabs.forEach(function(tab) {
+                tab.addEventListener('click', function() {
+                    console.log('click');
+                    editAddressButton.style.display = 'block';
+                });
+            });
+
+            var firstTab = document.querySelector('.nav-tabs .nav-link');
+            if (firstTab) {
+                firstTab.click();
+            }
+
+        });
+    </script>
+
+    <style>
+        .edit-button {
+            width: 150px; /* Adjust the width as per your preference */
+        }
+    </style>
+    
+{% endblock %}

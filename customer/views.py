@@ -1,11 +1,11 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.forms import UserCreationForm
 from .forms import CustomerProfileForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from .forms import CustomerProfileForm, AddressForm
-from .models import Address
+from .models import CustomerProfile, Address
 
 
 def register(request):
@@ -49,29 +49,68 @@ def logout_view(request):
 
 
 @login_required
+def profile(request):
+    customer_profile = CustomerProfile.objects.get(user=request.user)
+
+    customer_addresses = Address.objects.filter(customer=customer_profile)
+
+    context = {
+        'profile': customer_profile,
+        'addresses': customer_addresses,
+    }
+    
+    return render(request, 'account_management/profile.html', context)
+
+
+@login_required
 def edit_profile(request):
     user = request.user
     profile = user.customerprofile
 
     if request.method == 'POST':
         profile_form = CustomerProfileForm(request.POST, instance=profile)
-        address_form = AddressForm(request.POST, instance=profile.address)
-
+        
         if profile_form.is_valid():
             profile_form.save()
-            return redirect('profile')
-        if address_form.is_valid():
-            address_form.save()
-            return redirect('profile')
-
+            return redirect('customer:profile')
+        
     else:
         profile_form = CustomerProfileForm(instance=profile)
-        address, _ = Address.objects.get_or_create(customer=profile)
+        
+    context = {
+        'profile_form': profile_form,
+     }
+
+    return render(request, 'account_management/edit_profile.html', context)
+
+
+
+@login_required
+def edit_address(request):
+    user = request.user
+    profile = user.customerprofile
+
+    addresses = Address.objects.filter(customer=profile)
+    current_tab = request.GET.get('current_tab')  # Retrieve the current_tab value from the form data
+    try:
+        address = addresses[int(current_tab)]
+    except Exception:
+        address = None
+
+    if request.method == 'POST':
+        address_form = AddressForm(request.POST, instance=address)
+    
+        if address_form.is_valid():
+            address = address_form.save(commit=False)
+            address.customer = profile
+            address.save()
+            return redirect('customer:profile')
+    else:
         address_form = AddressForm(instance=address)
 
     context = {
-        'profile_form': profile_form,
         'address_form': address_form,
+        'current_tab': current_tab,  # Pass the current_tab value to the template context
     }
 
-    return render(request, 'account_management/edit_profile.html', context)
+    return render(request, 'account_management/edit_address.html', context)
