@@ -1,16 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.forms import ValidationError
-
-def valid_phone_number(string):
-    """Checks if a string is a valid phone number.
-    
-    Accepts two formats : only digits or '+' followed by digits ; otherwise raises a ValidationError"""
-    if string[0] == '+':
-        if not string[1:].isdigit():
-            raise ValidationError('Not a valid phone number.')
-    elif not string.isdigit():
-        raise ValidationError('Not a valid phone number.')
+from .validators import  valid_phone_number
 
 class CustomerProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)

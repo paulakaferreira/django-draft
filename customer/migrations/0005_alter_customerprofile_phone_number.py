@@ -14,6 +14,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='customerprofile',
             name='phone_number',
-            field=models.CharField(blank=True, max_length=20, validators=[customer.models.valid_phone_number]),
+            field=models.CharField(blank=True, max_length=20, validators=[customer.validators.valid_phone_number]),
         ),
     ]
