@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load bootstrap5 %}
+
+{% block content %}
+<h1 class="my-3">{% block h1 %}Your cart{% endblock %}</h1>
+
+<div class="container">
+    {% if cart_items %}
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Image</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for cart_item in cart_items %}
+                <tr>
+                    <td>{{ cart_item.product.name }}</td>
+                    <td><img src="{{ cart_item.product.image.url }}" alt="{{ cart_item.product.name }}" width="50" height="50"></td>
+                    <td>{{ cart_item.product.price }}</td>
+                    <td>{{ cart_item.number }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+    <div class="alert alert-info" role="alert">
+        Your cart is empty.
+    </div>
+    {% endif %}
+</div>
+
+
+{% endblock %}
