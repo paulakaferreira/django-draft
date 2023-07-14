@@ -10,6 +10,7 @@ class CustomerProfile(models.Model):
     gender = models.CharField(max_length=10, choices=[('male', 'Male'), ('female', 'Female'), ('other', 'Other')], blank=True)
     created = models.DateTimeField(auto_now_add=True)
     last_updated = models.DateTimeField(auto_now=True)
+    products = models.ManyToManyField('catalog.Product', through='cart.Cart')
 
     def __str__(self):
         return self.user.username
