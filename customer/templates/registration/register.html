@@ -10,12 +10,15 @@
         {% csrf_token %}
         
         <!-- User Registration Form -->
-        {% bootstrap_form form %}
+        {% bootstrap_form form layout='horizontal' %}
         
         <!-- Customer Profile Form -->
-        {% bootstrap_form profile_form %}
+        {% bootstrap_form profile_form layout='horizontal' %}
         
-        {% buttons submit='Register' reset='Cancel' %}{% endbuttons %}
+        <div class="text-end my-3">
+        {% bootstrap_button 'Cancel' button_type='reset' button_class='btn-secondary' extra_classes='mx-3' %}
+        {% bootstrap_button 'Register' button_type='submit' button_class='btn-primary' %}
+        </div>
     </form>
 
 {% endblock %}

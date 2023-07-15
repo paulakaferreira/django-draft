@@ -23,11 +23,12 @@
 
 {% block content %}
 
+<h1 class="my-3">{% block h1 %}Login{% endblock %}</h1>
+{% bootstrap_form_errors form %}
 <div class="col-md-3">
-    <h1 class="my-3">{% block h1 %}Login{% endblock %}</h1>
     <form method="post">
         {% csrf_token %}
-        {% bootstrap_form form %}
+        {% bootstrap_form form alert_error_type='fields' %}
         <button type="submit" class="btn btn-primary">Login</button>
     </form>
 </div>

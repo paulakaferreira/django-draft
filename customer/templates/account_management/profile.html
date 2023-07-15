@@ -1,7 +1,40 @@
 {% extends 'base.html' %}
 
+{% load bootstrap5 %}
+
 {% block content %}
 
 <h1 class="my-3">{% block h1 %}Profile{% endblock %}</h1>
+
+<!--
+    profile page features :
+        * managing personal information (name, email, addresses, picture, password...)
+        * view order history
+        * 
+-->
+
+<div class="card">
+    <div class="card-header h5">
+        Personal information
+    </div>
+    <div class="card-body">
+        <ul class="card-text list-unstyled">
+            <li><b>Username</b> : {{ user.username }}</li>
+            <li><b>First name</b> : {{ user.first_name }}</li>
+            <li><b>Last name</b> : {{ user.last_name }}</li>
+            <li><b>Mail</b> : {{ user.email }}</li>
+            <li><b>Date of birth</b> : {{ customer.date_of_birth }}</li>
+            <li><b>Phone number</b> : {{ customer.phone_number }}</li>
+            <li><b>Gender</b> : {{ customer.gender }}</li>
+            <li><a class="btn btn-primary" href="{% url 'customer:change_profile' %}">Update your profile</a></li>
+        </ul>
+        <hr>
+        <div class="text-secondary">
+            Created {{ customer.created.ctime }}
+            <div class="vr mx-2"></div>
+            Last updated {{ customer.last_updated.ctime }}
+        </div>
+    </div>
+</div>
 
 {% endblock %}

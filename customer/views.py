@@ -1,13 +1,14 @@
-from django.shortcuts import render, redirect
-from django.contrib.auth.forms import UserCreationForm
-from .forms import CustomerProfileForm
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm, PasswordChangeForm
+from .forms import CustomerProfileForm, SignUpForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
+from .models import CustomerProfile
 
 def register(request):
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+        form = SignUpForm(request.POST)
         profile_form = CustomerProfileForm(request.POST)
         if form.is_valid() and profile_form.is_valid():
             user = form.save()
@@ -16,7 +17,7 @@ def register(request):
             profile.save()
             return redirect('/customer/registration-success')
     else:
-        form = UserCreationForm()
+        form = SignUpForm()
         profile_form = CustomerProfileForm()
     return render(request, 'registration/register.html', {'form': form, 'profile_form': profile_form})
 
@@ -44,6 +45,20 @@ def logout_view(request):
     logout(request)
     return redirect('home')
 
+# NOTE : for now, all users are able to access this page but this creates 
+# a 404 if they don't have a customer profile (which is the case for staff members and admin)
+# 
+# we need to fix this and decide how the site should behave in such cases
 @login_required
 def profile_view(request):
-    return render (request, 'account_management/profile.html')
+    customer = get_object_or_404(CustomerProfile, user=request.user)
+    return render(request, 'account_management/profile.html', {'customer': customer})
+
+@login_required
+def change_profile_view(request):
+    user_change_form = UserChangeForm()
+    password_change_form = PasswordChangeForm(request.user)
+    customer = get_object_or_404(CustomerProfile, user=request.user)
+    return render(request, 'account_management/change_profile.html', {'customer': customer, 
+                                                                      'user_change_form': user_change_form,
+                                                                      'password_change_form': password_change_form})
