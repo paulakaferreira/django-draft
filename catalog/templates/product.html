@@ -14,7 +14,7 @@
 
     <p>
         ${{ product.price }}
-        <a class="btn btn-primary btn-sm" href="#">Add to cart</a>
+        <a class="btn btn-primary btn-sm" href="{% url 'cart:add_to_cart' product.id %}">Add to cart</a>
     </p>
 
     {% if product.image %}
