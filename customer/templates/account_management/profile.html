@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+
 {% load bootstrap5 %}
 
 {% block content %}
@@ -9,15 +10,20 @@
         </div>
         <div class="card-body">
             <p class="card-text"><strong>Username:</strong> {{ profile.user.username }}</p>
+            <p class="card-text"><strong>Last name:</strong> {{ profile.user.last_name }}</p>
+            <p class="card-text"><strong>First name:</strong> {{ profile.user.first_name }}</p>
+            <p class="card-text"><strong>Email:</strong> {{ profile.user.email }}</p>
             <p class="card-text"><strong>Date of Birth:</strong> {{ profile.date_of_birth }}</p>
             <p class="card-text"><strong>Phone Number:</strong> {{ profile.phone_number }}</p>
             <p class="card-text"><strong>Gender:</strong> {{ profile.gender }}</p>
         </div>
         <div class="d-flex justify-content-between">
             <a href="{% url 'customer:edit-profile' %}" class="btn btn-primary btn-sm" >Edit Profile</a>
+            Created {{ customer.created.ctime }}
+            <div class="vr mx-2"></div>
+            Last updated {{ customer.last_updated.ctime }}
         </div>
     </div>
-
 
     <div class="mb-5"></div> <!-- Add vertical margin -->
 

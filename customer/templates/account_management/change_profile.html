@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% load bootstrap5 %}
+
+{% block content %}
+
+<h1 class="my-3">{% block h1 %}Profile management{% endblock %}</h1>
+
+{% bootstrap_form password_change_form %}
+{% bootstrap_form user_change_form %}
+
+{% endblock %}

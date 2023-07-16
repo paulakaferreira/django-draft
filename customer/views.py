@@ -1,16 +1,14 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.forms import UserCreationForm
-from .forms import CustomerProfileForm
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm, PasswordChangeForm
+from .forms import CustomerProfileForm, AddressForm, SignUpForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
-from .forms import CustomerProfileForm, AddressForm
 from .models import CustomerProfile, Address
-
 
 def register(request):
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+        form = SignUpForm(request.POST)
         profile_form = CustomerProfileForm(request.POST)
         if form.is_valid() and profile_form.is_valid():
             user = form.save()
@@ -19,7 +17,7 @@ def register(request):
             profile.save()
             return redirect('/customer/registration-success')
     else:
-        form = UserCreationForm()
+        form = SignUpForm()
         profile_form = CustomerProfileForm()
     return render(request, 'registration/register.html', {'form': form, 'profile_form': profile_form})
 
@@ -46,7 +44,6 @@ def login(request):
 def logout_view(request):
     logout(request)
     return redirect('home')
-
 
 @login_required
 def profile(request):
