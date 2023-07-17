@@ -14,10 +14,16 @@ class CustomerProfileForm(forms.ModelForm):
     """Sign-up form relative to customer information"""
     class Meta:
         model = models.CustomerProfile
-        exclude = ['created', 'last_updated', 'user']
+        exclude = ['created', 'last_updated', 'user', 'products']
 
 class AddressForm(forms.ModelForm):
     """Add an address form"""
     class Meta:
         model = models.Address
         exclude = ['created', 'last_updated', 'customer']
+
+class EditUserForm(forms.ModelForm):
+    """The same as SignUpForm, without the password field"""
+    class Meta:
+        model = User
+        fields = ['username', 'first_name', 'last_name', 'email']

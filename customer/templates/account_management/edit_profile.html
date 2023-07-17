@@ -6,25 +6,19 @@
 <h1 class="my-3">{% block h1 %}Edit Profile{% endblock %}</h1>
 
   <form method="POST">
+
     {% csrf_token %}
+
     <h2>Profile Information</h2>
-    <div class="row">
-      <div class="col-md-6">
-        {% for field in profile_form %}
-          <div class="mb-3">
-            <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
-            {{ field }}
-            {% if field.errors %}
-              <div class="invalid-feedback">
-                {% for error in field.errors %}
-                  {{ error }}
-                {% endfor %}
-              </div>
-            {% endif %}
-          </div>
-        {% endfor %}
-      </div>
+
+    {% bootstrap_form user_form layout='horizontal' %}
+    {% bootstrap_form profile_form layout='horizontal' %}
+    
+    <div class="text-end my-3">
+      {% url 'customer:profile' as profile_redirect %}
+      {% bootstrap_button 'Cancel' button_type='link' href=profile_redirect button_class='btn-secondary' extra_classes='mx-3' %}
+      {% bootstrap_button 'Save' button_type='submit' button_class='btn-primary' %}
     </div>
-    <button type="submit" class="btn btn-primary">Save</button>
+
   </form>
 {% endblock %}

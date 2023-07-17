@@ -1,6 +1,5 @@
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.forms import UserCreationForm, UserChangeForm, PasswordChangeForm
-from .forms import CustomerProfileForm, AddressForm, SignUpForm
+from django.shortcuts import render, redirect
+from .forms import CustomerProfileForm, AddressForm, SignUpForm, EditUserForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
@@ -65,18 +64,22 @@ def edit_profile(request):
     profile = user.customerprofile
 
     if request.method == 'POST':
+        user_form = EditUserForm(request.POST, instance=user)
         profile_form = CustomerProfileForm(request.POST, instance=profile)
         
-        if profile_form.is_valid():
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
             profile_form.save()
             return redirect('customer:profile')
         
     else:
+        user_form = EditUserForm(instance=user)
         profile_form = CustomerProfileForm(instance=profile)
         
     context = {
+        'user_form' : user_form,
         'profile_form': profile_form,
-     }
+    }
 
     return render(request, 'account_management/edit_profile.html', context)
 
