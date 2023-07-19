@@ -5,7 +5,11 @@
 <h1 class="my-3">{% block h1 %}Delete Address?{% endblock %}</h1>
 
 <div class="alert alert-danger" role="alert">
-    Are you sure you want to delete address "{{ address.name }}"? This operation is irreversible.
+    {% if address.name != '' %}
+        Are you sure you want to delete address "{{ address.name }}"? This operation is irreversible.
+    {% else %}
+        Are you sure you want to delete this address? This operation is irreversible.
+    {% endif %}
 </div>
 
 <div class="text-end my-3">
