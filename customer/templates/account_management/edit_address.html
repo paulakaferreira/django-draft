@@ -13,8 +13,11 @@
         <div>
           {% bootstrap_form address_form layout='horizontal' %}
           <div class="text-end my-3">
-            {% url 'customer:profile' as profile_redirect %}
-            {% bootstrap_button 'Cancel' button_type='link' href=profile_redirect button_class='btn-secondary' extra_classes='mx-3' %}
+            {% if request.META.HTTP_REFERER %}
+                {% bootstrap_button 'Cancel' button_type='link' href=request.META.HTTP_REFERER button_class='btn-secondary' extra_classes='mx-3' %}
+            {% else %}
+                {% bootstrap_button 'Cancel' button_type='link' href='/' button_class='btn-secondary' extra_classes='mx-3' %}
+            {% endif %}
             {% bootstrap_button 'Save' button_type='submit' button_class='btn-primary' %}
           </div>
         </div>

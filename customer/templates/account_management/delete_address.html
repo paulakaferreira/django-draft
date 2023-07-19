@@ -13,9 +13,12 @@
 </div>
 
 <div class="text-end my-3">
-    {% url 'customer:profile' as profile_redirect %}
     {% url 'customer:delete-address' address.id as delete_address %}
-    {% bootstrap_button 'Cancel' button_type='link' href=profile_redirect button_class='btn-secondary' extra_classes='mx-3' %}
+    {% if request.META.HTTP_REFERER %}
+        {% bootstrap_button 'Cancel' button_type='link' href=request.META.HTTP_REFERER button_class='btn-secondary' extra_classes='mx-3' %}
+    {% else %}
+        {% bootstrap_button 'Cancel' button_type='link' href='/' button_class='btn-secondary' extra_classes='mx-3' %}
+    {% endif %}
     {% bootstrap_button 'Delete' button_type='link' href=delete_address button_class='btn-danger' %}
 </div>
 
