@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required, user_passes_test
 from .models import CustomerProfile, Address
-from .authorizations import is_client
+from .authorizations import is_customer
 
 def register(request):
     if request.method == 'POST':
@@ -52,7 +52,7 @@ def customerprofile_needed(request):
 
 
 @login_required
-@user_passes_test(is_client, login_url='customer:customerprofile-needed', redirect_field_name=None)
+@user_passes_test(is_customer, login_url='customer:customerprofile-needed', redirect_field_name=None)
 def profile(request):
     customer_profile = CustomerProfile.objects.get(user=request.user)
 
@@ -67,7 +67,7 @@ def profile(request):
 
 
 @login_required
-@user_passes_test(is_client, login_url='customer:customerprofile-needed', redirect_field_name=None)
+@user_passes_test(is_customer, login_url='customer:customerprofile-needed', redirect_field_name=None)
 def edit_profile(request):
     user = request.user
     profile = user.customerprofile
@@ -95,7 +95,7 @@ def edit_profile(request):
 
 
 @login_required
-@user_passes_test(is_client, login_url='customer:customerprofile-needed', redirect_field_name=None)
+@user_passes_test(is_customer, login_url='customer:customerprofile-needed', redirect_field_name=None)
 def edit_address(request):
     user = request.user
     profile = user.customerprofile
@@ -128,7 +128,7 @@ def edit_address(request):
 
 
 @login_required
-@user_passes_test(is_client, login_url='customer:customerprofile-needed', redirect_field_name=None)
+@user_passes_test(is_customer, login_url='customer:customerprofile-needed', redirect_field_name=None)
 def delete_address_confirmation(request):
     """User confirms they want to delete given address"""
     user = request.user
@@ -150,7 +150,7 @@ def delete_address_confirmation(request):
 
 
 @login_required
-@user_passes_test(is_client, login_url='customer:customerprofile-needed', redirect_field_name=None)
+@user_passes_test(is_customer, login_url='customer:customerprofile-needed', redirect_field_name=None)
 def delete_address(request, address_id):
     """Delete address from base after confirmation"""
     address = Address.objects.get(id=address_id)
