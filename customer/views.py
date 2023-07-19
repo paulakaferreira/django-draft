@@ -5,6 +5,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required, user_passes_test
 from .models import CustomerProfile, Address
 from .authorizations import is_customer
+from django.contrib.auth.models import Group
 
 def register(request):
     if request.method == 'POST':
@@ -13,6 +14,11 @@ def register(request):
         if form.is_valid() and profile_form.is_valid():
             user = form.save()
             profile = profile_form.save(commit=False)
+            customer_group = Group.objects.filter(name='Customers')
+            if not customer_group: # create Customers if not exists
+                customer_group = Group.objects.create(name='Customers')
+            user.groups.add(customer_group) # add new user to Customers
+            user.save()
             profile.user = user
             profile.save()
             return redirect('/customer/registration-success')
