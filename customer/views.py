@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from .forms import CustomerProfileForm, AddressForm, SignUpForm, EditUserForm
-from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
+from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
 from django.contrib.auth.decorators import login_required, user_passes_test
 from .models import CustomerProfile, Address
 from .authorizations import is_customer
@@ -163,3 +163,22 @@ def delete_address(request, address_id):
     address.delete()
 
     return redirect('customer:profile')
+
+
+@login_required
+@user_passes_test(is_customer, login_url='customer:customerprofile-needed', redirect_field_name=None)
+def change_password(request):
+    """Allow customers to change their password"""
+    user = request.user
+    if request.method == 'POST':
+        password_form = PasswordChangeForm(user, request.POST)
+        if password_form.is_valid():
+            user = password_form.save()
+            update_session_auth_hash(request, user) # prevent password change to log the user out
+            return redirect('customer:profile')
+    else:
+        password_form = PasswordChangeForm(user=user)
+    context = {
+        'password_form': password_form,
+    }
+    return render(request, 'account_management/change_password.html', context)
