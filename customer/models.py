@@ -16,6 +16,7 @@ class CustomerProfile(models.Model):
         return self.user.username
     
 class Address(models.Model):
+    name = models.CharField(max_length=50, blank=True)
     street_number = models.CharField(max_length=10, blank=True)
     street = models.CharField(max_length=100, blank=False)
     postal_code = models.CharField(max_length=10, blank=False)

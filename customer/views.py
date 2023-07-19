@@ -109,8 +109,39 @@ def edit_address(request):
         address_form = AddressForm(instance=address)
 
     context = {
+        'address': address,
         'address_form': address_form,
-        'current_tab': current_tab,  # Pass the current_tab value to the template context
+        # 'current_tab': current_tab,  # Pass the current_tab value to the template context
     }
 
     return render(request, 'account_management/edit_address.html', context)
+
+
+@login_required
+def delete_address_confirmation(request):
+    """User confirms they want to delete given address"""
+    user = request.user
+    profile = user.customerprofile
+
+    addresses = Address.objects.filter(customer=profile)
+    current_tab = request.GET.get('current_tab')  # Retrieve the current_tab value from the form data
+
+    try:
+        address = addresses[int(current_tab)]
+    except Exception:
+        address = None
+
+    context = {
+        'address': address,
+    }
+
+    return render(request, 'account_management/delete_address.html', context)
+
+
+@login_required
+def delete_address(request, address_id):
+    """Delete address from base after confirmation"""
+    address = Address.objects.get(id=address_id)
+    address.delete()
+
+    return redirect('customer:profile')
