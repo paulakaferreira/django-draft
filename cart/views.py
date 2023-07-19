@@ -1,8 +1,10 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from .models import Cart, Product
+from customer.authorizations import is_client
 
-@login_required(login_url='/customer/login')
+@login_required
+@user_passes_test(is_client, login_url='customer:customerprofile-needed', redirect_field_name=None)
 def cart_view(request):
     customer = request.user.customerprofile
     cart_items = Cart.objects.filter(customer=customer)
@@ -10,7 +12,8 @@ def cart_view(request):
     return render(request, 'cart_view.html', context)
 
 
-@login_required(login_url='/customer/login')
+@login_required
+@user_passes_test(is_client, login_url='customer:customerprofile-needed', redirect_field_name=None)
 def add_to_cart(request, product_id):
     product = Product.objects.get(id=product_id)
     customer = request.user.customerprofile
@@ -21,7 +24,8 @@ def add_to_cart(request, product_id):
     return redirect('cart:cart_view')
 
 
-@login_required(login_url='/customer/login')
+@login_required
+@user_passes_test(is_client, login_url='customer:customerprofile-needed', redirect_field_name=None)
 def remove_from_cart(request, product_id):
     product = Product.objects.get(id=product_id)
     customer = request.user.customerprofile

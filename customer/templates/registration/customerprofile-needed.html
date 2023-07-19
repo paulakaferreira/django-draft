@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% load bootstrap5 %}
+
+{% block content %}
+
+<h1 class="my-3">{% block h1 %}Customer profile needed{% endblock %}</h1>
+
+{% block messages %}
+<div class="alert alert-warning my-3" role="alert">
+    The page you are trying to access is only available to registered customers, not staff members or administrators.<br/>
+    Please login as a customer if you want to access it.
+</div>
+{% endblock %}
+
+<div class="text-end my-3">
+    {% url 'home' as homepage_redirect %}
+    {% bootstrap_button 'Back to Homepage' button_type='link' href=homepage_redirect button_class='btn btn-secondary' %}
+</div>
+
+{% endblock %}

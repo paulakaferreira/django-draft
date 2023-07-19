@@ -2,8 +2,9 @@ from django.shortcuts import render, redirect
 from .forms import CustomerProfileForm, AddressForm, SignUpForm, EditUserForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from .models import CustomerProfile, Address
+from .authorizations import is_client
 
 def register(request):
     if request.method == 'POST':
@@ -44,7 +45,14 @@ def logout_view(request):
     logout(request)
     return redirect('home')
 
+
 @login_required
+def customerprofile_needed(request):
+    return render(request, 'registration/customerprofile-needed.html')
+
+
+@login_required
+@user_passes_test(is_client, login_url='customer:customerprofile-needed', redirect_field_name=None)
 def profile(request):
     customer_profile = CustomerProfile.objects.get(user=request.user)
 
@@ -59,6 +67,7 @@ def profile(request):
 
 
 @login_required
+@user_passes_test(is_client, login_url='customer:customerprofile-needed', redirect_field_name=None)
 def edit_profile(request):
     user = request.user
     profile = user.customerprofile
@@ -86,6 +95,7 @@ def edit_profile(request):
 
 
 @login_required
+@user_passes_test(is_client, login_url='customer:customerprofile-needed', redirect_field_name=None)
 def edit_address(request):
     user = request.user
     profile = user.customerprofile
@@ -118,6 +128,7 @@ def edit_address(request):
 
 
 @login_required
+@user_passes_test(is_client, login_url='customer:customerprofile-needed', redirect_field_name=None)
 def delete_address_confirmation(request):
     """User confirms they want to delete given address"""
     user = request.user
@@ -139,6 +150,7 @@ def delete_address_confirmation(request):
 
 
 @login_required
+@user_passes_test(is_client, login_url='customer:customerprofile-needed', redirect_field_name=None)
 def delete_address(request, address_id):
     """Delete address from base after confirmation"""
     address = Address.objects.get(id=address_id)
