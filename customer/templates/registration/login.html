@@ -2,6 +2,10 @@
 
 {% load bootstrap5 %}
 
+{% block content %}
+
+<h1 class="my-3">{% block h1 %}Login{% endblock %}</h1>
+
 {% block messages %}
     {% if request.GET.next %}
         {% if request.GET.next == '/cart/' %}
@@ -20,11 +24,8 @@
     {% endif %}
 {% endblock %}
 
-
-{% block content %}
-
-<h1 class="my-3">{% block h1 %}Login{% endblock %}</h1>
 {% bootstrap_form_errors form %}
+
 <div class="col-md-3">
     <form method="post">
         {% csrf_token %}
@@ -32,4 +33,5 @@
         <button type="submit" class="btn btn-primary">Login</button>
     </form>
 </div>
+
 {% endblock %}
