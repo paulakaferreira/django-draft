@@ -16,8 +16,8 @@ def register(request):
             profile = profile_form.save(commit=False)
             customer_group = Group.objects.filter(name='Customers')
             if not customer_group: # create Customers if not exists
-                customer_group = Group.objects.create(name='Customers')
-            user.groups.add(customer_group) # add new user to Customers
+                customer_group = Group.objects.filter(name='Customers')
+            user.groups.set(customer_group) # add new user to Customers
             user.save()
             profile.user = user
             profile.save()
