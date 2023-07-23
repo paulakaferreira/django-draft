@@ -24,7 +24,8 @@
                     <td>${{ cart_item.product.price }}</td>
                     <td>${{ cart_item.subtotal }}</td>
                     <td>
-                        <select class="form-select form-select-sm" id="item-quantity">
+                        {% if cart_item.number < 10 %}
+                        <select class="form-select form-select-sm w-50" id="{{ forloop.counter0 }}">
                             {% for x in select_quantity_iterator %}
                             {% if forloop.counter == cart_item.number %}
                             <option value="{{ forloop.counter }}" selected>{{ forloop.counter }}</option>
@@ -32,7 +33,14 @@
                             <option value="{{ forloop.counter }}">{{ forloop.counter }}</option>
                             {% endif %}
                             {% endfor %}
+                            <option value="10">10+</option>
                         </select>
+                        {% else %}
+                        <div class="row row-cols-2">
+                            <input type="text" id="input-{{ forloop.counter0 }}" name="item_number" class="form-control form-control-sm w-25 mx-3" value="{{ cart_item.number }}">
+                            <button id="{{ forloop.counter0 }}" class="btn btn-secondary btn-sm w-25">OK</button>
+                        </div>
+                        {% endif %}
                     </td>
                     <td class="text-end">
                         <a href="{% url 'cart:remove_from_cart' cart_item.product.id %}" class="btn btn-primary btn-sm">Remove unit</a>
@@ -53,10 +61,23 @@
     var selectors = document.querySelectorAll('.form-select');
     selectors.forEach(function (selector, key) {
         selector.addEventListener('change', function() {
-            var redirectUrl = "{% url 'cart:change_quantity' item_counter=0 item_number=1 %}".replace('0', key).replace('1', this.value);
+            var item_counter = this.id;
+            var redirectUrl = "{% url 'cart:change_quantity' item_counter='COUNTER' item_number='NUMBER' %}".replace('COUNTER', item_counter).replace('NUMBER', this.value);
             window.location.href = redirectUrl;
         });
     });
+
+    var submitButtons = document.querySelectorAll('.btn-secondary');
+    submitButtons.forEach(function (button, key) {
+        button.addEventListener('click', function() {
+            var inputField = document.getElementById('input-' + this.id);
+            var item_counter = this.id;
+            var item_number = inputField.value;
+            var redirectUrl = "{% url 'cart:change_quantity' item_counter='COUNTER' item_number='NUMBER' %}".replace('COUNTER', item_counter).replace('NUMBER', item_number);
+            window.location.href = redirectUrl;
+        });
+    });
+    
 
 </script>
 

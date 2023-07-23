@@ -10,7 +10,7 @@ def cart_view(request):
     cart_items = Cart.objects.filter(customer=customer)
     context = {
         'cart_items': cart_items,
-        'select_quantity_iterator': range(10),
+        'select_quantity_iterator': range(9),
         }
     return render(request, 'cart_view.html', context)
 
@@ -33,9 +33,12 @@ def change_quantity(request, item_counter, item_number):
     user = request.user
     customer = user.customerprofile
     cart_items = Cart.objects.filter(customer=customer)
-    item = cart_items[item_counter]
-    item.number = item_number
-    item.save()
+    try:
+        item = cart_items[int(item_counter)]
+        item.number = int(item_number)
+        item.save()
+    except:
+        pass # don't do anything if item isn't found or item number/counter are incorrect
     return redirect('cart:cart_view')
 
 
