@@ -23,9 +23,9 @@
                     <td><img src="{{ cart_item.product.image.url }}" alt="{{ cart_item.product.name }}" width="50" height="50"></td>
                     <td>${{ cart_item.product.price }}</td>
                     <td>${{ cart_item.subtotal }}</td>
-                    <td>
+                    <td style="width:20%">
                         {% if cart_item.number < 10 %}
-                        <select class="form-select form-select-sm w-50" id="{{ forloop.counter0 }}">
+                        <select class="form-select form-select-sm" id="{{ forloop.counter0 }}" style="width:55%">
                             {% for x in select_quantity_iterator %}
                             {% if forloop.counter == cart_item.number %}
                             <option value="{{ forloop.counter }}" selected>{{ forloop.counter }}</option>
@@ -36,13 +36,13 @@
                             <option value="10">10+</option>
                         </select>
                         {% else %}
-                        <div class="row row-cols-2">
-                            <input type="text" id="input-{{ forloop.counter0 }}" name="item_number" class="form-control form-control-sm w-25 mx-3" value="{{ cart_item.number }}">
-                            <button id="{{ forloop.counter0 }}" class="btn btn-secondary btn-sm w-25">OK</button>
+                        <div>
+                            <input type="text" id="input-{{ forloop.counter0 }}" name="item_number" class="form-control form-control-sm w-25" value="{{ cart_item.number }}" style="display:inline-block;vertical-align:middle">
+                            <button id="{{ forloop.counter0 }}" class="btn btn-secondary btn-sm w-25 mx-2" style="display:inline-block;vertical-align:middle">OK</button>
                         </div>
                         {% endif %}
                     </td>
-                    <td class="text-end">
+                    <td style="width:15%" class="text-end">
                         <a href="{% url 'cart:remove_from_cart' cart_item.product.id %}" class="btn btn-primary btn-sm">Remove unit</a>
                     </td>
                 </tr>
