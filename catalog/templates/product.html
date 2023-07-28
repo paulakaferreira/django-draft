@@ -30,7 +30,7 @@
     {% endif %}
 
     <h3 class="pt-4">Description</h3>
-    <p>{{ product.description }}</p>
+    <p>{{ product.description|linebreaks }}</p>
 
     <h3 class="pt-4">Customer reviews</h3>
     {% if product.reviews.all %}
