@@ -23,7 +23,7 @@
             <i class="bi bi-star-half" style="color:goldenrod"></i>
             {% endif %}
             {% endfor %}
-            ({{ product.reviews.count }})
+            (<a href="#reviews" class="text-secondary">{{ product.reviews.count }}</a>)
         </p>
         {% endif %}
 
@@ -53,7 +53,7 @@
     <h3 class="pt-4">Description</h3>
     <p>{{ product.description|linebreaks }}</p>
 
-    <h3 class="pt-4 my-3">Customer reviews</h3>
+    <h3 class="pt-4 my-3" id="reviews">Customer reviews</h3>
     {% if product.reviews.all %}
     <div class="container my-3">
         <div class="row">
