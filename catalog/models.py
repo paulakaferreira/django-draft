@@ -47,12 +47,6 @@ class Product(SlugModel):
 
     def __str__(self):
         return self.name
-    
-    def get_short_description(self):
-        if len(self.description) <= 100:
-            return self.description
-        else:
-            return self.description[:97]+'...'
         
     def is_available(self):
         if self.stock > 0:
