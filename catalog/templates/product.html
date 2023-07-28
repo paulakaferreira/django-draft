@@ -34,8 +34,34 @@
 
     <h3 class="pt-4">Customer reviews</h3>
     {% if product.reviews.all %}
-    <!-- TODO : add reviews -->
-    <p>(no content yet)</p>
+    <div class="container my-3">
+        <div class="row">
+            {% for review in product.reviews.all %}
+            <div class="col-sm-4 my-3">
+                <div class="card">
+                    <div class="card-header">
+                        Review by {{ review.customer }} - {{ review.created.date }}<br/>
+                        {% for n in '01234'|make_list %}
+                        {% if forloop.counter0 < review.notation %}
+                        <i class="bi bi-star-fill" style="color:goldenrod"></i>
+                        {% else %}
+                        <i class="bi bi-star" style="color:goldenrod"></i>
+                        {% endif %}
+                        {% endfor %}
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            {{ review.title }}
+                        </h5>
+                        <p class="card-text">
+                            {{ review.comment|truncatechars:100|linebreaks }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
     {% else %}
     <p>
         No reviews yet.<br/>
