@@ -51,7 +51,7 @@
     {% endif %}
 
     <h3 class="pt-4">Description</h3>
-    <p>{{ product.description|linebreaks }}</p>
+    {{ product.description|linebreaks }}
 
     <h3 class="pt-4 my-3" id="reviews">Customer reviews</h3>
     {% if product.reviews.all %}
@@ -74,9 +74,16 @@
                         <h5 class="card-title">
                             {{ review.title }}
                         </h5>
-                        <p class="card-text">
+                        <div class="card-text">
                             {{ review.comment|truncatechars:100|linebreaks }}
-                        </p>
+                            {% if review.comment|length > 99 %}
+                            <button type="button" class="btn btn-link" id="read-more-{{ forloop.counter0 }}">Read more</button>
+                            {% endif %}
+                        </div>
+                        <div class="card-text" hidden>
+                            {{ review.comment|linebreaks }}
+                            <button type="button" class="btn btn-link" id="read-less-{{ forloop.counter0 }}">Read less</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -103,5 +110,22 @@
     {% endif %}
 
 </div>
+
+<script>
+
+    function expandCard (text) {
+        text.toggleAttribute('hidden');
+        text.nextElementSibling.toggleAttribute('hidden');
+    }
+
+    var cardTexts = document.querySelectorAll('.card-text');
+
+    cardTexts.forEach(function (text, key) {
+        var readMore = document.getElementById('read-more-' + key);
+        var readLess = document.getElementById('read-less-' + key);
+        readMore.addEventListener('click', function() {expandCard(text)});
+        readLess.addEventListener('click', function() {expandCard(text)});
+    });
+</script>
 
 {% endblock %}
