@@ -7,12 +7,23 @@ from customer.authorizations import is_customer
 # Create your views here.
 
 def product_view(request, slug):
+
     product = get_object_or_404(Product, slug=slug)
     review_form = ReviewForm()
+
+    # reviewed is True if logged in customer already reviewed the product
+    # in that case, template won't display the review form
+    if not request.user.is_authenticated or not is_customer(request.user):
+        reviewed = False
+    else:
+        reviewed = bool(product.reviews.filter(customer=request.user.customerprofile))
+
     context = {
         'product': product,
         'review_form': review_form,
+        'reviewed': reviewed
         }
+    
     return render(request, 'product.html', context)
 
 def category_view(request, slug):
