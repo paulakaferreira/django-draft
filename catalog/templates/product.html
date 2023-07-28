@@ -8,6 +8,25 @@
 
     <h1 class="my-3">{% block h1 %}{{ product.name }}{% endblock %}</h1>
 
+    <div class="my-3">
+
+        {% if product.get_average_rating %}
+
+        <!-- display average rating using stars -->
+        {% for n in '01234'|make_list %}
+        {% if forloop.counter <= product.get_average_rating %}
+        <i class="bi bi-star-fill" style="color:goldenrod"></i>
+        {% elif forloop.counter0 >= product.get_average_rating  %}
+        <i class="bi bi-star" style="color:goldenrod"></i>
+        {% else %}
+        <i class="bi bi-star-half" style="color:goldenrod"></i>
+        {% endif %}
+        {% endfor %}
+
+        {% endif %}
+
+    </div>
+
     {% if product.is_available is True %}
     <p style="color:green; font-style: italic;">This product is available !</p>
     {% else %}
