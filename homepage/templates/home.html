@@ -16,9 +16,22 @@
                 {% else %}
                 <img src="/media/product_images/placeholder.png" alt="{{ product.name }}" height="140">
                 {% endif %}
-                <div style="height: 200px">
+                <div style="height: 250px">
                     <h3 class="fw-normal">{{ product.name }}</h3>
                     <p>{{ product.description|truncatechars:100 }}</p>
+                    <p>
+                        {% if product.get_average_rating %}
+                        {% for n in '01234'|make_list %}
+                        {% if forloop.counter <= product.get_average_rating %}
+                        <i class="bi bi-star-fill" style="color:goldenrod"></i>
+                        {% elif forloop.counter0 >= product.get_average_rating  %}
+                        <i class="bi bi-star" style="color:goldenrod"></i>
+                        {% else %}
+                        <i class="bi bi-star-half" style="color:goldenrod"></i>
+                        {% endif %}
+                        {% endfor %}
+                        {% endif %}
+                    </p>
                     <p>${{ product.price }}</p>
                     <p>Categories :
                         {% for category in product.categories.all %}
