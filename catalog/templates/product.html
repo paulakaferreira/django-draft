@@ -13,16 +13,18 @@
         {% if product.get_average_rating %}
 
         <!-- display average rating using stars -->
-        {% for n in '01234'|make_list %}
-        {% if forloop.counter <= product.get_average_rating %}
-        <i class="bi bi-star-fill" style="color:goldenrod"></i>
-        {% elif forloop.counter0 >= product.get_average_rating  %}
-        <i class="bi bi-star" style="color:goldenrod"></i>
-        {% else %}
-        <i class="bi bi-star-half" style="color:goldenrod"></i>
-        {% endif %}
-        {% endfor %}
-
+        <p>
+            {% for n in '01234'|make_list %}
+            {% if forloop.counter <= product.get_average_rating %}
+            <i class="bi bi-star-fill" style="color:goldenrod"></i>
+            {% elif forloop.counter0 >= product.get_average_rating  %}
+            <i class="bi bi-star" style="color:goldenrod"></i>
+            {% else %}
+            <i class="bi bi-star-half" style="color:goldenrod"></i>
+            {% endif %}
+            {% endfor %}
+            ({{ product.reviews.count }})
+        </p>
         {% endif %}
 
     </div>

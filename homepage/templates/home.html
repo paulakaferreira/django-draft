@@ -19,8 +19,8 @@
                 <div style="height: 250px">
                     <h3 class="fw-normal">{{ product.name }}</h3>
                     <p>{{ product.description|truncatechars:100 }}</p>
+                    {% if product.get_average_rating %}
                     <p>
-                        {% if product.get_average_rating %}
                         {% for n in '01234'|make_list %}
                         {% if forloop.counter <= product.get_average_rating %}
                         <i class="bi bi-star-fill" style="color:goldenrod"></i>
@@ -30,8 +30,9 @@
                         <i class="bi bi-star-half" style="color:goldenrod"></i>
                         {% endif %}
                         {% endfor %}
-                        {% endif %}
+                        ({{ product.reviews.count }})
                     </p>
+                    {% endif %}
                     <p>${{ product.price }}</p>
                     <p>Categories :
                         {% for category in product.categories.all %}
