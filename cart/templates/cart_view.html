@@ -58,8 +58,10 @@
 
 <script>
 
+    // retrieve all select inputs on page
     var selectors = document.querySelectorAll('.form-select');
     selectors.forEach(function (selector, key) {
+        // call change_quantity on corresponding product when a new quantity is selected
         selector.addEventListener('change', function() {
             var item_counter = this.id;
             var redirectUrl = "{% url 'cart:change_quantity' item_counter='COUNTER' item_number='NUMBER' %}".replace('COUNTER', item_counter).replace('NUMBER', this.value);
@@ -67,8 +69,10 @@
         });
     });
 
+    // retrieve all 'OK' buttons on page based on their btn-secondary class
     var submitButtons = document.querySelectorAll('.btn-secondary');
     submitButtons.forEach(function (button, key) {
+        // call change_quantity on corresponding product when a new quantity is submitted
         button.addEventListener('click', function() {
             var inputField = document.getElementById('input-' + this.id);
             var item_counter = this.id;
