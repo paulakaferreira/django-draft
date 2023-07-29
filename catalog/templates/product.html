@@ -74,16 +74,18 @@
                         <h5 class="card-title">
                             {{ review.title }}
                         </h5>
-                        <div class="card-text">
+                        <div class="card-text" name="review-short" id="review-short-{{ forloop.counter0 }}">
                             {{ review.comment|truncatechars:100|linebreaks }}
                             {% if review.comment|length > 99 %}
                             <button type="button" class="btn btn-link" id="read-more-{{ forloop.counter0 }}">Read more</button>
                             {% endif %}
                         </div>
-                        <div class="card-text" hidden>
+                        {% if review.comment|length > 99 %}
+                        <div class="card-text" name="review-long" id="review-long-{{ forloop.counter0 }}" hidden>
                             {{ review.comment|linebreaks }}
                             <button type="button" class="btn btn-link" id="read-less-{{ forloop.counter0 }}">Read less</button>
                         </div>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -113,19 +115,28 @@
 
 <script>
 
-    function expandCard (text) {
-        text.toggleAttribute('hidden');
-        text.nextElementSibling.toggleAttribute('hidden');
+    // toggle hidden attribute for both long and short reviews
+    function expandCard (longReview, shortReview) {
+        longReview.toggleAttribute('hidden');
+        shortReview.toggleAttribute('hidden');
     }
 
-    var cardTexts = document.querySelectorAll('.card-text');
+    // retrieve all long reviews
+    var reviews = document.getElementsByName('review-long');
 
-    cardTexts.forEach(function (text, key) {
-        var readMore = document.getElementById('read-more-' + key);
-        var readLess = document.getElementById('read-less-' + key);
-        readMore.addEventListener('click', function() {expandCard(text)});
-        readLess.addEventListener('click', function() {expandCard(text)});
+    reviews.forEach(function (longReview, key) {
+
+        // retrieve matching short review and read more/less buttons
+        var reviewId = longReview.id.replace('review-long-', '');
+        var shortReview = document.getElementById('review-short-' + reviewId);
+        var readMore = document.getElementById('read-more-' + reviewId);
+        var readLess = document.getElementById('read-less-' + reviewId);
+
+        // call expandCard when one of the buttons is clicked
+        readMore.addEventListener('click', function() {expandCard(longReview, shortReview)});
+        readLess.addEventListener('click', function() {expandCard(longReview, shortReview)});
     });
+
 </script>
 
 {% endblock %}
