@@ -4,6 +4,10 @@
 
 {% block title %}{% block h1 %}(no title){% endblock %} - Name Placeholder{% endblock %}
 
+{% block bootstrap5_before_content %}
+<div class="d-flex flex-column min-vh-100">
+{% endblock %}
+
 {% block bootstrap5_content %}
 
 {% block navbar %}
@@ -72,7 +76,7 @@
 
 {% endblock %}
 
-  <div class="container">
+  <div class="px-md-5 py-md-3">
     {% autoescape off %}{% bootstrap_messages %}{% endautoescape %}
 
     {% block content %}{% block messages %}{% endblock %}(no content){% endblock %}
@@ -86,4 +90,8 @@
   </footer>
   {% endblock %}
 
+{% endblock %}
+
+{% block bootstrap5_after_content %}
+</div>
 {% endblock %}
