@@ -6,25 +6,43 @@
 
 <div class="container">
     {% if cart_items %}
-        <table class="table table-striped">
+        <table class="table table-striped align-middle" id="cartItems" role="tablist">
             <thead>
                 <tr>
                     <th>Product</th>
                     <th>Image</th>
                     <th>Price</th>
-                    <th>Quantity</th>
                     <th>Subtotal</th>
+                    <th>Quantity</th>
                 </tr>
             </thead>
             <tbody>
                 {% for cart_item in cart_items %}
                 <tr>
-                    <td>{{ cart_item.product.name }}</td>
+                    <td><a href="{% url 'catalog:product_view' slug=cart_item.product.slug %}">{{ cart_item.product.name }}</a></td>
                     <td><img src="{{ cart_item.product.image.url }}" alt="{{ cart_item.product.name }}" width="50" height="50"></td>
-                    <td>{{ cart_item.product.price }}</td>
-                    <td>{{ cart_item.number }}</td>
-                    <td>{{ cart_item.subtotal }}</td>
-                    <td>
+                    <td>${{ cart_item.product.price }}</td>
+                    <td>${{ cart_item.subtotal }}</td>
+                    <td style="width:20%">
+                        {% if cart_item.number < 10 %}
+                        <select class="form-select form-select-sm" id="{{ forloop.counter0 }}" style="width:55%">
+                            {% for x in select_quantity_iterator %}
+                            {% if forloop.counter == cart_item.number %}
+                            <option value="{{ forloop.counter }}" selected>{{ forloop.counter }}</option>
+                            {% else %}
+                            <option value="{{ forloop.counter }}">{{ forloop.counter }}</option>
+                            {% endif %}
+                            {% endfor %}
+                            <option value="10">10+</option>
+                        </select>
+                        {% else %}
+                        <div>
+                            <input type="text" id="input-{{ forloop.counter0 }}" name="item_number" class="form-control form-control-sm w-25" value="{{ cart_item.number }}" style="display:inline-block;vertical-align:middle">
+                            <button id="{{ forloop.counter0 }}" class="btn btn-secondary btn-sm w-25 mx-2" style="display:inline-block;vertical-align:middle">OK</button>
+                        </div>
+                        {% endif %}
+                    </td>
+                    <td style="width:15%" class="text-end">
                         <a href="{% url 'cart:remove_from_cart' cart_item.product.id %}" class="btn btn-primary btn-sm">Remove unit</a>
                     </td>
                 </tr>
@@ -37,6 +55,31 @@
     </div>
     {% endif %}
 </div>
+
+<script>
+
+    var selectors = document.querySelectorAll('.form-select');
+    selectors.forEach(function (selector, key) {
+        selector.addEventListener('change', function() {
+            var item_counter = this.id;
+            var redirectUrl = "{% url 'cart:change_quantity' item_counter='COUNTER' item_number='NUMBER' %}".replace('COUNTER', item_counter).replace('NUMBER', this.value);
+            window.location.href = redirectUrl;
+        });
+    });
+
+    var submitButtons = document.querySelectorAll('.btn-secondary');
+    submitButtons.forEach(function (button, key) {
+        button.addEventListener('click', function() {
+            var inputField = document.getElementById('input-' + this.id);
+            var item_counter = this.id;
+            var item_number = inputField.value;
+            var redirectUrl = "{% url 'cart:change_quantity' item_counter='COUNTER' item_number='NUMBER' %}".replace('COUNTER', item_counter).replace('NUMBER', item_number);
+            window.location.href = redirectUrl;
+        });
+    });
+    
+
+</script>
 
 
 {% endblock %}
