@@ -31,23 +31,33 @@ def add_to_cart(request, product_id):
 @login_required
 @user_passes_test(is_customer, login_url='customer:customerprofile-needed', redirect_field_name=None)
 def change_quantity(request, product_id, item_number):
+
     user = request.user
     customer = user.customerprofile
+
+    # check that product and cart_item for active customer exist, otherwise send a warning
     try:
         product = Product.objects.get(id=int(product_id))
         item = Cart.objects.get(product=product, customer=customer)
+
+        # delete cart item if product is no longer available
         if item.product.stock == 0:
             messages.warning(request, f"Product {item.product} is not available at the moment")
             item.delete()
+
         else:
+            # check that quantity is a valid positive integer
             try:
                 item.number = int(item_number)
+                # remove item if selected quantity is 0
                 if item.number == 0:
                     item.delete()
+                # set quantity to product stock if desired quantity is bigger
                 elif item.number > item.product.stock:
                     item.number = item.product.stock
                     messages.warning(request, f"There are only {item.number} products in stock for {item.product}")
                     item.save()
+                # if everything is OK, just save the item with the new quantity
                 else:
                     item.save()
             except:
