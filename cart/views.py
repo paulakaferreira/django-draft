@@ -23,9 +23,10 @@ def add_to_cart(request, product_id):
     customer = request.user.customerprofile
     cart_item, created = Cart.objects.get_or_create(product=product, customer=customer)
     if not created:
-        cart_item.number += 1
-        cart_item.save()
-    return redirect('cart:cart_view')
+        quantity = cart_item.number + 1
+        return redirect('cart:change_quantity', product_id=product_id, item_number=quantity)
+    else:
+        return redirect('cart:cart_view')
 
 
 @login_required
