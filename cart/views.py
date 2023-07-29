@@ -36,14 +36,22 @@ def change_quantity(request, item_counter, item_number):
     cart_items = Cart.objects.filter(customer=customer)
     try:
         item = cart_items[int(item_counter)]
-        try:
-            item.number = int(item_number)
-            if item.number == 0:
-                item.delete()
-            else:
-                item.save()
-        except:
-            messages.warning(request, f"Cannot resolve {item_number} to a valid quantity")
+        if item.product.stock == 0:
+            messages.warning(request, f"Product {item.product} is not available at the moment")
+            item.delete()
+        else:
+            try:
+                item.number = int(item_number)
+                if item.number == 0:
+                    item.delete()
+                elif item.number > item.product.stock:
+                    item.number = item.product.stock
+                    messages.warning(request, f"There are only {item.number} products in stock for {item.product}")
+                    item.save()
+                else:
+                    item.save()
+            except:
+                messages.warning(request, f"Cannot resolve {item_number} to a valid quantity")
     except:
         messages.warning(request, "Cannot access desired item")
     return redirect('cart:cart_view')
