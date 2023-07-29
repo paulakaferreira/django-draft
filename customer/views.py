@@ -15,7 +15,7 @@ def register(request):
             user = form.save()
             profile = profile_form.save(commit=False)
             customer_group, created = Group.objects.get_or_create(name='Customers')
-            user.groups.set(customer_group) # add new user to Customers
+            user.groups.add(customer_group) # add new user to Customers
             user.save()
             profile.user = user
             profile.save()
