@@ -25,7 +25,7 @@
                     <td>${{ cart_item.subtotal }}</td>
                     <td style="width:20%">
                         {% if cart_item.number < 10 %}
-                        <select class="form-select form-select-sm" id="{{ forloop.counter0 }}" style="width:55%">
+                        <select class="form-select form-select-sm" id="product-quantity-{{ cart_item.product.id }}" name="item-number" style="width:55%">
                             {% for x in select_quantity_iterator %}
                             {% if forloop.counter == cart_item.number %}
                             <option value="{{ forloop.counter }}" selected>{{ forloop.counter }}</option>
@@ -37,8 +37,8 @@
                         </select>
                         {% else %}
                         <div>
-                            <input type="text" id="input-{{ forloop.counter0 }}" name="item_number" class="form-control form-control-sm w-25" value="{{ cart_item.number }}" style="display:inline-block;vertical-align:middle">
-                            <button id="{{ forloop.counter0 }}" class="btn btn-secondary btn-sm w-25 mx-2" style="display:inline-block;vertical-align:middle">OK</button>
+                            <input type="text" id="product-quantity-{{ cart_item.product.id }}" name="item-number" class="form-control form-control-sm w-25" value="{{ cart_item.number }}" style="display:inline-block;vertical-align:middle">
+                            <button id="button-product-{{ cart_item.product.id }}" class="btn btn-secondary btn-sm w-25 mx-2" style="display:inline-block;vertical-align:middle">OK</button>
                         </div>
                         {% endif %}
                     </td>
@@ -58,30 +58,31 @@
 
 <script>
 
-    // retrieve all select inputs on page
-    var selectors = document.querySelectorAll('.form-select');
-    selectors.forEach(function (selector, key) {
-        // call change_quantity on corresponding product when a new quantity is selected
-        selector.addEventListener('change', function() {
-            var item_counter = this.id;
-            var redirectUrl = "{% url 'cart:change_quantity' item_counter='COUNTER' item_number='NUMBER' %}".replace('COUNTER', item_counter).replace('NUMBER', this.value);
-            window.location.href = redirectUrl;
-        });
-    });
+    // retrieve all select and input widgets used for quantity selection
+    var quantities = document.getElementsByName('item-number');
 
-    // retrieve all 'OK' buttons on page based on their btn-secondary class
-    var submitButtons = document.querySelectorAll('.btn-secondary');
-    submitButtons.forEach(function (button, key) {
-        // call change_quantity on corresponding product when a new quantity is submitted
-        button.addEventListener('click', function() {
-            var inputField = document.getElementById('input-' + this.id);
-            var item_counter = this.id;
-            var item_number = inputField.value;
-            var redirectUrl = "{% url 'cart:change_quantity' item_counter='COUNTER' item_number='NUMBER' %}".replace('COUNTER', item_counter).replace('NUMBER', item_number);
-            window.location.href = redirectUrl;
-        });
+    quantities.forEach(function(element, key) {
+
+        // retrieve product id based on element id
+        var product_id = element.id.replace('product-quantity-', '');
+
+        // simple listener for select widgets
+        if(element.tagName == 'SELECT'){
+            element.addEventListener('change', function() {
+                var redirectUrl = "{% url 'cart:change_quantity' product_id='ID' item_number='NUMBER' %}".replace('ID', product_id).replace('NUMBER', this.value);
+                window.location.href = redirectUrl;
+            });
+        }
+
+        // find matching button and add listener for input widgets
+        else if(element.tagName == 'INPUT'){
+            var button = document.getElementById('button-product-' + product_id);
+            button.addEventListener('click', function() {
+                var redirectUrl = "{% url 'cart:change_quantity' product_id='ID' item_number='NUMBER' %}".replace('ID', product_id).replace('NUMBER', element.value);
+                window.location.href = redirectUrl;
+            });
+        }
     });
-    
 
 </script>
 

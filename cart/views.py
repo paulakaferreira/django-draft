@@ -30,12 +30,12 @@ def add_to_cart(request, product_id):
 
 @login_required
 @user_passes_test(is_customer, login_url='customer:customerprofile-needed', redirect_field_name=None)
-def change_quantity(request, item_counter, item_number):
+def change_quantity(request, product_id, item_number):
     user = request.user
     customer = user.customerprofile
-    cart_items = Cart.objects.filter(customer=customer)
     try:
-        item = cart_items[int(item_counter)]
+        product = Product.objects.get(id=int(product_id))
+        item = Cart.objects.get(product=product, customer=customer)
         if item.product.stock == 0:
             messages.warning(request, f"Product {item.product} is not available at the moment")
             item.delete()
