@@ -4,23 +4,21 @@
 
 {% block content %}
 
-    <h1>{% block h1 %}Register{% endblock %}</h1>
+    <h1 class="my-3">{% block h1 %}Register{% endblock %}</h1>
 
     <form method="post">
         {% csrf_token %}
         
         <!-- User Registration Form -->
-        {% bootstrap_form form %}
+        {% bootstrap_form form layout='horizontal' %}
         
         <!-- Customer Profile Form -->
-        <h2>Customer Profile</h2>
-        {% bootstrap_form profile_form %}
+        {% bootstrap_form profile_form layout='horizontal' %}
         
-        <!-- Address Form -->
-        <h2>Address</h2>
-        {% bootstrap_form address_form %}
-        
-        {% buttons submit='Register' reset='Cancel' %}{% endbuttons %}
+        <div class="text-end my-3">
+        {% bootstrap_button 'Cancel' button_type='reset' button_class='btn-secondary' extra_classes='mx-3' %}
+        {% bootstrap_button 'Register' button_type='submit' button_class='btn-primary' %}
+        </div>
     </form>
 
 {% endblock %}

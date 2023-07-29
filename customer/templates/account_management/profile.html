@@ -1,0 +1,145 @@
+{% extends 'base.html' %}
+
+{% load bootstrap5 %}
+
+{% block content %}
+    <h1 class="my-3">{% block h1 %}Your profile{% endblock %}</h1>
+    <div class="card mb-3">
+        <div class="card-header">
+            <h2 class="card-title">Account Information</h2>
+        </div>
+        <div class="card-body">
+            <p class="card-text"><strong>Username:</strong> {{ profile.user.username }}</p>
+            <p class="card-text"><strong>Last name:</strong> {{ profile.user.last_name }}</p>
+            <p class="card-text"><strong>First name:</strong> {{ profile.user.first_name }}</p>
+            <p class="card-text"><strong>Email:</strong> {{ profile.user.email }}</p>
+            <p class="card-text"><strong>Date of Birth:</strong> {{ profile.date_of_birth }}</p>
+            <p class="card-text"><strong>Phone Number:</strong> {{ profile.phone_number }}</p>
+            <p class="card-text"><strong>Gender:</strong> {{ profile.gender }}</p>
+        </div>
+        <div class="d-flex">
+            <a href="{% url 'customer:edit-profile' %}" class="btn btn-primary btn-sm" >Edit Profile</a>
+            {% url 'customer:change-password' as change_password %}
+            {% bootstrap_button 'Change password' button_type='link' href=change_password extra_classes='btn-sm mx-3' %}
+            <div class="text-secondary mx-3">
+                Created {{ profile.created.ctime }}
+                <div class="vr mx-2"></div>
+                Last updated {{ profile.last_updated.ctime }}
+            </div>
+        </div>
+    </div>
+
+    <div class="mb-5"></div> <!-- Add vertical margin -->
+
+    {% if addresses %}
+        <div class="card mb-3">
+            <div class="card-header">
+                <h2 class="card-title">Address Information</h2>
+            </div>
+            <ul class="nav nav-tabs" id="addressTabs" role="tablist">
+                {% for address in addresses %}
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link {% if forloop.first %}active{% endif %}"
+                                id="address-tab-{{ forloop.counter0 }}" data-bs-toggle="tab"
+                                data-bs-target="#address-{{ forloop.counter0 }}" type="button" role="tab"
+                                aria-controls="address-{{ forloop.counter0 }}"
+                                aria-selected="{% if forloop.first %}true{% else %}false{% endif %}">
+                            {% if address.name %}
+                                {{ address.name }}
+                            {% else %}
+                                Address {{ forloop.counter }}
+                            {% endif %}
+                        </button>
+                    </li>
+                {% endfor %}
+                <li class="nav-item" role="presentation">
+                    {% url 'customer:edit-address' as add_adress_redirect %}
+                    {% bootstrap_button '+' button_type="link" href=add_adress_redirect extra_classes="nav-link" %}
+                </li>
+            </ul>
+            <div class="tab-content" id="addressTabsContent">
+                {% for address in addresses %}
+                    <div class="tab-pane fade {% if forloop.first %}show active{% endif %}"
+                         id="address-{{ forloop.counter0 }}" role="tabpanel"
+                         aria-labelledby="address-tab-{{ forloop.counter0 }}">
+                        <div class="card-body">
+                            <p class="card-text"><strong>Street Number:</strong> {{ address.street_number }}</p>
+                            <p class="card-text"><strong>Street:</strong> {{ address.street }}</p>
+                            <p class="card-text"><strong>Postal Code:</strong> {{ address.postal_code }}</p>
+                            <p class="card-text"><strong>City:</strong> {{ address.city }}</p>
+                            <p class="card-text"><strong>Country:</strong> {{ address.country }}</p>
+                            <div class="text-secondary">
+                                Created {{ address.created.ctime }}
+                                <div class="vr mx-2"></div>
+                                Last updated {{ address.last_updated.ctime }}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="d-flex justify-content-between">
+                <button type="button" id="editAddressButton" class="btn btn-primary btn-sm">Edit Address</button>
+                <button type="button" id="deleteAddressButton" class="btn btn-danger btn-sm">Delete Address</button>
+            </div>
+        </div>
+    {% else %}
+        <div class="alert alert-info" role="alert">
+            No address information available.
+        </div>
+        <div class="d-flex justify-content-between my-3">
+            <a class="btn btn-primary btn-sm" href="{% url 'customer:edit-address' %}">Add Address</a>
+            <button type="button" id="editAddressButton" class="btn btn-primary btn-sm" style="display:none">Edit Address</button>
+            <button type="button" id="deleteAddressButton" class="btn btn-danger btn-sm" style="display: none">Delete Address</button>
+        </div>
+    {% endif %}
+
+    <script> // Create tab event
+        document.addEventListener('DOMContentLoaded', function() {
+            var addressTabs = new bootstrap.Tab(document.getElementById('addressTabs'));
+            try {
+                addressTabs.show();
+            } catch(e) {}
+
+            var deleteAddressButton = document.getElementById('deleteAddressButton');
+            var editAddressButton = document.getElementById('editAddressButton');
+
+            editAddressButton.addEventListener('click', function() {
+                try {
+                    var activeTab = document.querySelector('.nav-tabs .nav-link.active');
+                    var tabIndex = Array.from(activeTab.parentElement.children).indexOf(activeTab);
+                    var editAddressUrl = "{% url 'customer:edit-address' %}?current_tab=" + activeTab.id.replace('address-tab-', '');
+                    window.location.href = editAddressUrl;
+                } catch (error) {
+                    var editAddressUrl = "{% url 'customer:edit-address' %}";
+                    window.location.href = editAddressUrl;
+                }
+            });
+
+            deleteAddressButton.addEventListener('click', function() {
+                try {
+                    var activeTab = document.querySelector('.nav-tabs .nav-link.active');
+                    var tabIndex = Array.from(activeTab.parentElement.children).indexOf(activeTab);
+                    var deleteAddressUrl = "{% url 'customer:delete-address-confirmation' %}?current_tab=" + activeTab.id.replace('address-tab-', '');
+                    window.location.href = deleteAddressUrl;
+                } catch (e){}
+            });
+
+            // Check if any tab is selected
+            var tabs = document.querySelectorAll('.nav-tabs .nav-link');
+            var isAnyTabSelected = false;
+            tabs.forEach(function(tab) {
+                tab.addEventListener('click', function() {
+                    console.log('click');
+                    editAddressButton.style.display = 'block';
+                });
+            });
+
+            var firstTab = document.querySelector('.nav-tabs .nav-link');
+            if (firstTab) {
+                firstTab.click();
+            }
+
+        });
+    </script>
+
+{% endblock %}

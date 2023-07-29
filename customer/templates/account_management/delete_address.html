@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load bootstrap5 %}
+
+{% block content %}
+<h1 class="my-3">{% block h1 %}Delete Address?{% endblock %}</h1>
+
+<div class="alert alert-danger" role="alert">
+    {% if address.name != '' %}
+        Are you sure you want to delete address "{{ address.name }}"? This operation is irreversible.
+    {% else %}
+        Are you sure you want to delete this address? This operation is irreversible.
+    {% endif %}
+</div>
+
+<div class="text-end my-3">
+    {% url 'customer:delete-address' address.id as delete_address %}
+    {% if request.META.HTTP_REFERER %}
+        {% bootstrap_button 'Cancel' button_type='link' href=request.META.HTTP_REFERER button_class='btn-secondary' extra_classes='mx-3' %}
+    {% else %}
+        {% bootstrap_button 'Cancel' button_type='link' href='/' button_class='btn-secondary' extra_classes='mx-3' %}
+    {% endif %}
+    {% bootstrap_button 'Delete' button_type='link' href=delete_address button_class='btn-danger' %}
+</div>
+
+{% endblock %}

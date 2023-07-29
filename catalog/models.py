@@ -35,7 +35,7 @@ class Product(SlugModel):
     categories = models.ManyToManyField(Category, related_name='products')
     description = models.TextField(blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
-    available = models.BooleanField(default=True)
+    stock = models.PositiveIntegerField(default=0)
     created = models.DateTimeField(auto_now_add=True)
     last_updated = models.DateTimeField(auto_now=True)
     image = models.ImageField(upload_to='product_images/', blank=True, null=True)
@@ -53,6 +53,12 @@ class Product(SlugModel):
             return self.description
         else:
             return self.description[:97]+'...'
+        
+    def is_available(self):
+        if self.stock > 0:
+            return True
+        else:
+            return False
 
 class Review(models.Model):
     title = models.CharField(max_length=50, blank=False)

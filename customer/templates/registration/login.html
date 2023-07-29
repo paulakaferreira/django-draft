@@ -1,19 +1,37 @@
 {% extends 'base.html' %}
 
-{% block message %}
-{% if request.META.HTTP_REFERER == 'http://127.0.0.1.:8000/cart/' %}
-<p> You have to login to view your cart </p>
-{% endif %}
-{% endblock %}
-
+{% load bootstrap5 %}
 
 {% block content %}
 
-<h1>{% block h1 %}Login{% endblock %}</h1>
+<h1 class="my-3">{% block h1 %}Login{% endblock %}</h1>
 
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn btn-primary">Login</button>
-</form>
+{% block messages %}
+    {% if request.GET.next %}
+        {% if request.GET.next == '/cart/' %}
+        <div class="alert alert-warning my-3" role="alert">
+            You have to login to access your cart.
+        </div>
+        {% elif request.GET.next == '/customer/profile/' %}
+        <div class="alert alert-warning my-3" role="alert">
+            You have to login to access your profile.
+        </div>
+        {% else %}
+        <div class="alert alert-warning my-3" role="alert">
+            You have to login to view this page.
+        </div>
+        {% endif %}
+    {% endif %}
+{% endblock %}
+
+{% bootstrap_form_errors form %}
+
+<div class="col-md-3">
+    <form method="post">
+        {% csrf_token %}
+        {% bootstrap_form form alert_error_type='fields' %}
+        <button type="submit" class="btn btn-primary">Login</button>
+    </form>
+</div>
+
 {% endblock %}
