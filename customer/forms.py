@@ -12,7 +12,6 @@ class SignUpForm(UserCreationForm):
 
 class CustomerProfileForm(forms.ModelForm):
     """Sign-up form relative to customer information"""
-    date_of_birth = forms.DateField(widget=forms.SelectDateWidget)
     class Meta:
         model = models.CustomerProfile
         exclude = ['created', 'last_updated', 'user', 'products']
