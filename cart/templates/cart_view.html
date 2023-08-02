@@ -20,7 +20,13 @@
                 {% for cart_item in cart_items %}
                 <tr>
                     <td><a href="{% url 'catalog:product_view' slug=cart_item.product.slug %}">{{ cart_item.product.name }}</a></td>
-                    <td><img src="{{ cart_item.product.image.url }}" alt="{{ cart_item.product.name }}" width="50" height="50"></td>
+                    <td>
+                        {% if cart_item.product.image %}
+                        <img src="{{ cart_item.product.image.url }}" alt="{{ cart_item.product.name }}" width="50" height="50">
+                        {% else %}
+                        <img src="/media/product_images/placeholder.png" alt="{{ cart_item.product.name }}" width="50" height="50">
+                        {% endif %}
+                    </td>
                     <td>${{ cart_item.product.price }}</td>
                     <td>${{ cart_item.subtotal }}</td>
                     <td style="width:20%">
