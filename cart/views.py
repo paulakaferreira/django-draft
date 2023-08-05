@@ -23,27 +23,46 @@ def add_to_cart(request, product_id):
     customer = request.user.customerprofile
     cart_item, created = Cart.objects.get_or_create(product=product, customer=customer)
     if not created:
-        cart_item.number += 1
-        cart_item.save()
-    return redirect('cart:cart_view')
+        quantity = cart_item.number + 1
+        return redirect('cart:change_quantity', product_id=product_id, item_number=quantity)
+    else:
+        return redirect('cart:cart_view')
 
 
 @login_required
 @user_passes_test(is_customer, login_url='customer:customerprofile-needed', redirect_field_name=None)
-def change_quantity(request, item_counter, item_number):
+def change_quantity(request, product_id, item_number):
+
     user = request.user
     customer = user.customerprofile
-    cart_items = Cart.objects.filter(customer=customer)
+
+    # check that product and cart_item for active customer exist, otherwise send a warning
     try:
-        item = cart_items[int(item_counter)]
-        try:
-            item.number = int(item_number)
-            if item.number == 0:
-                item.delete()
-            else:
-                item.save()
-        except:
-            messages.warning(request, f"Cannot resolve {item_number} to a valid quantity")
+        product = Product.objects.get(id=int(product_id))
+        item = Cart.objects.get(product=product, customer=customer)
+
+        # delete cart item if product is no longer available
+        if item.product.stock == 0:
+            messages.warning(request, f"Product {item.product} is not available at the moment")
+            item.delete()
+
+        else:
+            # check that quantity is a valid positive integer
+            try:
+                item.number = int(item_number)
+                # remove item if selected quantity is 0
+                if item.number == 0:
+                    item.delete()
+                # set quantity to product stock if desired quantity is bigger
+                elif item.number > item.product.stock:
+                    item.number = item.product.stock
+                    messages.warning(request, f"There are only {item.number} products in stock for {item.product}")
+                    item.save()
+                # if everything is OK, just save the item with the new quantity
+                else:
+                    item.save()
+            except:
+                messages.warning(request, f"Cannot resolve {item_number} to a valid quantity")
     except:
         messages.warning(request, "Cannot access desired item")
     return redirect('cart:cart_view')

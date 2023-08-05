@@ -1,14 +1,45 @@
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, render, redirect
 from catalog.models import Product, Category
+from .forms import ReviewForm
+from django.contrib.auth.decorators import login_required, user_passes_test
+from customer.authorizations import is_customer
 
 # Create your views here.
 
 def product_view(request, slug):
+
     product = get_object_or_404(Product, slug=slug)
-    context = {'product': product}
+    review_form = ReviewForm()
+
+    # reviewed is True if logged in customer already reviewed the product
+    # in that case, template won't display the review form
+    if not request.user.is_authenticated or not is_customer(request.user):
+        reviewed = False
+    else:
+        reviewed = bool(product.reviews.filter(customer=request.user.customerprofile))
+
+    context = {
+        'product': product,
+        'review_form': review_form,
+        'reviewed': reviewed
+        }
+    
     return render(request, 'product.html', context)
 
 def category_view(request, slug):
     category = get_object_or_404(Category, slug=slug)
     context = {'category': category}
     return render(request, 'category.html', context)
+
+@login_required
+@user_passes_test(is_customer, login_url='customer:customerprofile-needed', redirect_field_name=None)
+def add_review(request, slug):
+    product = get_object_or_404(Product, slug=slug)
+    if request.method == 'POST':
+        review_form = ReviewForm(request.POST)
+        if review_form.is_valid():
+            review = review_form.save(commit=False)
+            review.customer = request.user.customerprofile
+            review.product = product
+            review.save()
+    return redirect('catalog:product_view', slug=slug)

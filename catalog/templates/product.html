@@ -1,10 +1,31 @@
 {% extends 'base.html' %}
 
+{% load bootstrap5 %}
+
 {% block content %}
 
-<div class="col-lg-12 mx-auto p-4 py-md-5">
-
     <h1 class="my-3">{% block h1 %}{{ product.name }}{% endblock %}</h1>
+
+    <div class="my-3">
+
+        {% if product.get_average_rating %}
+
+        <!-- display average rating using stars -->
+        <p>
+            {% for n in '01234'|make_list %}
+            {% if forloop.counter <= product.get_average_rating %}
+            <i class="bi bi-star-fill" style="color:goldenrod"></i>
+            {% elif forloop.counter0 >= product.get_average_rating  %}
+            <i class="bi bi-star" style="color:goldenrod"></i>
+            {% else %}
+            <i class="bi bi-star-half" style="color:goldenrod"></i>
+            {% endif %}
+            {% endfor %}
+            (<a href="#reviews" class="text-secondary">{{ product.reviews.count }}</a>)
+        </p>
+        {% endif %}
+
+    </div>
 
     {% if product.is_available is True %}
     <p style="color:green; font-style: italic;">This product is available !</p>
@@ -28,19 +49,90 @@
     {% endif %}
 
     <h3 class="pt-4">Description</h3>
-    <p>{{ product.description }}</p>
+    {{ product.description|linebreaks }}
 
-    <h3 class="pt-4">Customer reviews</h3>
+    <h3 class="pt-4 my-3" id="reviews">Customer reviews</h3>
     {% if product.reviews.all %}
-    <!-- TODO : add reviews -->
-    <p>(no content yet)</p>
+    <div class="container my-3">
+        <div class="row">
+            {% for review in product.reviews.all %}
+            <div class="col-sm-4 my-3">
+                <div class="card">
+                    <div class="card-header">
+                        Review by {{ review.customer }} - {{ review.created.date }}<br/>
+                        {% for n in '01234'|make_list %}
+                        {% if forloop.counter0 < review.notation %}
+                        <i class="bi bi-star-fill" style="color:goldenrod"></i>
+                        {% else %}
+                        <i class="bi bi-star" style="color:goldenrod"></i>
+                        {% endif %}
+                        {% endfor %}
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            {{ review.title }}
+                        </h5>
+                        <div class="card-text" name="review-short" id="review-short-{{ forloop.counter0 }}">
+                            {{ review.comment|truncatechars:100|linebreaks }}
+                            {% if review.comment|length > 99 %}
+                            <button type="button" class="btn btn-link" id="read-more-{{ forloop.counter0 }}">Read more</button>
+                            {% endif %}
+                        </div>
+                        {% if review.comment|length > 99 %}
+                        <div class="card-text" name="review-long" id="review-long-{{ forloop.counter0 }}" hidden>
+                            {{ review.comment|linebreaks }}
+                            <button type="button" class="btn btn-link" id="read-less-{{ forloop.counter0 }}">Read less</button>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
     {% else %}
-    <p>
-        No reviews yet.<br/>
-        Bought the product yourself ? Give us your opinion below !
-    </p>
+    <p>No reviews yet.</p>
     {% endif %}
 
-</div>
+    {% if not user.is_authenticated %}
+    <p><a href="{% url 'customer:login' %}?next={{ request.path }}">Login</a> to give us your opinion!</p>
+    {% elif not reviewed %}
+    <p>Give us your opinion below!</p>
+    <div class="container">
+        <form method="post" action="{% url 'catalog:add_review' slug=product.slug %}">
+            {% csrf_token %}
+            {% bootstrap_form review_form %}
+            <div class="text-end my-3">
+                {% bootstrap_button 'Submit' button_type='submit' extra_classes='end-text' %}
+            </div>
+        </form>
+    </div>
+    {% endif %}
+
+<script>
+
+    // toggle hidden attribute for both long and short reviews
+    function expandCard (longReview, shortReview) {
+        longReview.toggleAttribute('hidden');
+        shortReview.toggleAttribute('hidden');
+    }
+
+    // retrieve all long reviews
+    var reviews = document.getElementsByName('review-long');
+
+    reviews.forEach(function (longReview, key) {
+
+        // retrieve matching short review and read more/less buttons
+        var reviewId = longReview.id.replace('review-long-', '');
+        var shortReview = document.getElementById('review-short-' + reviewId);
+        var readMore = document.getElementById('read-more-' + reviewId);
+        var readLess = document.getElementById('read-less-' + reviewId);
+
+        // call expandCard when one of the buttons is clicked
+        readMore.addEventListener('click', function() {expandCard(longReview, shortReview)});
+        readLess.addEventListener('click', function() {expandCard(longReview, shortReview)});
+    });
+
+</script>
 
 {% endblock %}

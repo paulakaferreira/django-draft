@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.text import slugify
 from customer.models import CustomerProfile
+from statistics import mean
 
 
 class SlugModel(models.Model):   
@@ -47,18 +48,22 @@ class Product(SlugModel):
 
     def __str__(self):
         return self.name
-    
-    def get_short_description(self):
-        if len(self.description) <= 100:
-            return self.description
-        else:
-            return self.description[:97]+'...'
         
     def is_available(self):
         if self.stock > 0:
             return True
         else:
             return False
+        
+    def get_average_rating(self):
+        """Returns average product rating - out of 10, to make half star display easier"""
+        if not self.reviews.all():
+            return None
+        else:
+            notations = self.reviews.all().values_list('notation', flat=True) # get all notations
+            average_rating = mean(notations)
+            average_rating = round(average_rating * 2) / 2
+            return average_rating
 
 class Review(models.Model):
     title = models.CharField(max_length=50, blank=False)
