@@ -39,25 +39,25 @@ def search_results_view(request):
     if not query:
         query = ''
 
-    sort = request.GET.get('sort') # retrieve sort option if there is one
-    if sort == 'top-rated': # not implemented yet : have to deal with non-existent rating field
-        sort_attribute = 'name'
-    elif sort == 'l-exp':
-        sort_attribute = 'price'
-    elif sort == 'm-exp':
-        sort_attribute = '-price'
-    else:
-        sort_attribute = '-created'
-
     products = Product.objects.filter(
         Q(name__icontains=query) |
         Q(description__icontains=query)
-    ).order_by(sort_attribute) # get all products whose name OR description contains query
+    ) # get all products whose name OR description contains query
+
+    sort = request.GET.get('sort') # retrieve sort option if there is one
+    if sort == 'top-rated': # not implemented yet : have to deal with non-existent rating field
+        products = sorted(products, key=lambda l: l.get_average_rating(), reverse=True)
+    elif sort == 'l-exp':
+        products = products.order_by('price')
+    elif sort == 'm-exp':
+        products = products.order_by('-price')
+    else:
+        products = products.order_by('-created')
 
     context = {
         'products': products,
         'query': query
-        }
+    }
     
     return render(request, 'search-results.html', context)
 
