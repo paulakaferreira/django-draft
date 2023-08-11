@@ -33,15 +33,32 @@ def category_view(request, slug):
     return render(request, 'category.html', context)
 
 def search_results_view(request):
-    query = request.GET['query']
+    """Returns products that match submitted query"""
+
+    query = request.GET.get('query') # retrieve query
+    if not query:
+        query = ''
+
+    sort = request.GET.get('sort') # retrieve sort option if there is one
+    if sort == 'top-rated': # not implemented yet : have to deal with non-existent rating field
+        sort_attribute = 'name'
+    elif sort == 'l-exp':
+        sort_attribute = 'price'
+    elif sort == 'm-exp':
+        sort_attribute = '-price'
+    else:
+        sort_attribute = '-created'
+
     products = Product.objects.filter(
         Q(name__icontains=query) |
         Q(description__icontains=query)
-    ) # get all products whose name OR description starts with query
+    ).order_by(sort_attribute) # get all products whose name OR description starts with query
+
     context = {
         'products': products,
         'query': query
         }
+    
     return render(request, 'search-results.html', context)
 
 @login_required
