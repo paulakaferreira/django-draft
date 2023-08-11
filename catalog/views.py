@@ -52,7 +52,7 @@ def search_results_view(request):
     products = Product.objects.filter(
         Q(name__icontains=query) |
         Q(description__icontains=query)
-    ).order_by(sort_attribute) # get all products whose name OR description starts with query
+    ).order_by(sort_attribute) # get all products whose name OR description contains query
 
     context = {
         'products': products,
