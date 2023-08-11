@@ -1,4 +1,5 @@
 from django.shortcuts import get_object_or_404, render, redirect
+from django.db.models import Q
 from catalog.models import Product, Category
 from .forms import ReviewForm
 from django.contrib.auth.decorators import login_required, user_passes_test
@@ -30,6 +31,18 @@ def category_view(request, slug):
     category = get_object_or_404(Category, slug=slug)
     context = {'category': category}
     return render(request, 'category.html', context)
+
+def search_results_view(request):
+    query = request.GET['query']
+    products = Product.objects.filter(
+        Q(name__icontains=query) |
+        Q(description__icontains=query)
+    ) # get all products whose name OR description starts with query
+    context = {
+        'products': products,
+        'query': query
+        }
+    return render(request, 'search-results.html', context)
 
 @login_required
 @user_passes_test(is_customer, login_url='customer:customerprofile-needed', redirect_field_name=None)
