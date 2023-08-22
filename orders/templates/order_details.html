@@ -15,7 +15,7 @@
     </div>
   </div>
 
-  <h3 class="mt-4">Products included:</h3>
+  <h3 class="mt-4">Products:</h3>
   <table class="table table-bordered">
     <thead>
       <tr>
@@ -36,11 +36,12 @@
   </table>
 
   <div class="mt-4">
-    <h4>Total Price: ${{ order.price }}</h4>
-    <p class="lead">Please review your order details and click the button below to confirm your purchase.</p>
+    <h5>Order Price: ${{ order.price }}</h5>
+    <h5>Delivery Fee: ${{ delivery.delivery_fee }}</h5>
+    <p class="lead">Please review your order details and click the button below to proceed to payment.</p>
     <form method="post">
       {% csrf_token %}
-      <button type="submit" class="btn btn-primary">Confirm Purchase</button>
+      <button type="submit" class="btn btn-primary">Proceed to payment</button>
     </form>
   </div>
 
