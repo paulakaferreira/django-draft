@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% load bootstrap5 %}
+
+{% block content %}
+<div class="container mt-5">
+  <h2>Select Billing and Delivery Addresses</h2>
+  {% if customer_addresses %}
+    <form method="post" action="{% url 'orders:create_order' %}">
+      {% csrf_token %}
+      <div class="row">
+        <div class="col-md-6">
+          <div class="mb-3">
+            <label for="billingAddress" class="form-label">Billing Address</label>
+            <select name="billingAddress" id="billingAddress" class="form-select">
+              {% for address in customer_addresses %}
+                <option value="{{ address.id }}">{{ address }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="mb-3">
+            <label for="deliveryAddress" class="form-label">Delivery Address</label>
+            <select name="deliveryAddress" id="deliveryAddress" class="form-select">
+              {% for address in customer_addresses %}
+                <option value="{{ address.id }}">{{ address }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+      </div>
+      {% bootstrap_button 'Place Order' button_type='submit' button_class='btn-primary' %}
+    </form>
+  {% else %}
+    <p>No addresses available for the customer. Please add an address:</p>
+    <a href="{% url 'customer:edit-address' %}" class="btn btn-primary">Add Address</a>
+  {% endif %}
+</div>
+{% endblock %}

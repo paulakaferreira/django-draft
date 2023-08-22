@@ -73,3 +73,10 @@ def add_review(request, slug):
             review.product = product
             review.save()
     return redirect('catalog:product_view', slug=slug)
+
+def catalog_view(request):
+    products = Product.objects.all()
+    context = {
+        'products': products,
+    }
+    return render(request, 'catalog.html', context)

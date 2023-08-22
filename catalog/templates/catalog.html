@@ -2,14 +2,13 @@
 
 {% block content %}
 
-<h1 class="my-3">{% block h1 %}{{ category.name }}{% endblock %}</h1>
+<h1 class="my-3">{% block h1 %}Catalog{% endblock %}</h1>
 
 <div class="content-container">
-    <h2 class="my-3">Products in {{ category.name }}</h2>
-    {% if category.products.all %}
+    {% if products %}
     <div class="container marketing" style="margin-top:30px">
         <div class="row">
-            {% for product in category.products.all %}
+            {% for product in products %}
             <div class="col-lg-4" style="text-align: center;">
                 {% if product.image %}
                 <img src="{{ product.image.url }}" alt="{{ product.name }}" height="140">
@@ -47,9 +46,7 @@
         </div>
     </div>
     {% else %}
-    <p>No products available in this category.</p>
+    <p>No products to display... Come back later!</p>
     {% endif %}
 </div>
-
 {% endblock %}
-

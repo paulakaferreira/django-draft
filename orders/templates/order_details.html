@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+  <h2>Order Details</h2>
+  <div class="card">
+    <div class="card-header">
+      Order ID: {{ order.id }}
+    </div>
+    <div class="card-body">
+      <h5 class="card-title">Customer: {{ order.customer.user.username }}</h5>
+      <p class="card-text">Status: {{ order.status }}</p>
+      <p class="card-text">Total Price: ${{ order.price }}</p>
+      <p class="card-text">Billing Address: {{ order.billing_address }}</p>
+    </div>
+  </div>
+
+  <h3 class="mt-4">Ordered Products:</h3>
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>Product</th>
+        <th>Quantity</th>
+        <th>Subtotal</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for order_product in order_products %}
+        <tr>
+          <td>{{ order_product.product.name }}</td>
+          <td>{{ order_product.number }}</td>
+          <td>${{ order_product.subtotal }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

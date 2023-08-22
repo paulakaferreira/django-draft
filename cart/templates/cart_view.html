@@ -55,6 +55,13 @@
                 {% endfor %}
             </tbody>
         </table>
+        <div class="text-end mt-3">
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <a href="{% url 'orders:choose_addresses' %}" class="btn btn-primary" type="submit">Proceed to Purchase</a>
+            </form>
+        </div>
     {% else %}
     <div class="alert alert-info" role="alert">
         Your cart is empty.
