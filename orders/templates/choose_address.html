@@ -6,7 +6,7 @@
 <div class="container mt-5">
   <h2>Select Billing and Delivery Addresses</h2>
   {% if customer_addresses %}
-    <form method="post" action="{% url 'orders:create_order' %}">
+    <form method="post" action="{% url 'orders:create-order' %}">
       {% csrf_token %}
       <div class="row">
         <div class="col-md-6">

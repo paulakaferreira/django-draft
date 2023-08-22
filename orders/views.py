@@ -50,7 +50,7 @@ def create_order(request):
                     subtotal=cart_item.subtotal(),
                 )
 
-            return redirect('orders:order_details', order_id=order.id)
+            return redirect('orders:order-details', order_id=order.id)
         else:
             return HttpResponse("Form is not valid.")
     else:
