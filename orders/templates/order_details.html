@@ -38,6 +38,7 @@
   <div class="mt-4">
     <h5>Order Price: ${{ order.price }}</h5>
     <h5>Delivery Fee: ${{ delivery.delivery_fee }}</h5>
+    <h3>Total: ${{ total }}</h3>
     <p class="lead">Please review your order details and click the button below to proceed to payment.</p>
     <form method="post">
       {% csrf_token %}

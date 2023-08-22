@@ -80,6 +80,7 @@ def order_details(request, order_id):
     context = {
         'order': order,
         'delivery': delivery,
+        'total': order.price + delivery.delivery_fee,
         'order_products': order_products,
     }
 
