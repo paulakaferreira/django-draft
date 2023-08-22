@@ -49,6 +49,9 @@ def create_order(request):
                     number=cart_item.number,
                     subtotal=cart_item.subtotal(),
                 )
+                order.price += cart_item.subtotal()
+            
+            order.save()
 
             return redirect('orders:order-details', order_id=order.id)
         else:
@@ -56,6 +59,7 @@ def create_order(request):
     else:
         order_form = OrderCreationForm(customer_addresses)
 
+@login_required
 def order_details(request, order_id):
     order = get_object_or_404(Order, id=order_id)
     order_products = OrderProduct.objects.filter(order=order)
