@@ -2,7 +2,7 @@
 
 {% block content %}
 <div class="container mt-5">
-  <h2>Order Details</h2>
+  <h1 class="my-3">{% block h1 %}Order Details{% endblock %}</h1>
   <div class="card">
     <div class="card-header">
       Order ID: {{ order.id }}
