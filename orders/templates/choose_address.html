@@ -2,6 +2,7 @@
 {% load bootstrap5 %}
 
 {% block content %}
+<h1 class="my-3">{% block h1 %}Address confirmation{% endblock %}</h1>
 <div class="container mt-5">
   <h2>Select Billing and Delivery Addresses</h2>
   {% if customer_addresses %}
