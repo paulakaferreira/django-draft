@@ -1,15 +1,18 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Order, OrderProduct, Delivery
 from .forms import OrderCreationForm
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from customer.models import Address
 from django.shortcuts import render, redirect
 from cart.models import Cart
 from django.http import HttpResponse
 from datetime import datetime, timedelta
+from django.contrib import messages
+from customer.authorizations import is_customer
 
 
 @login_required
+@user_passes_test(is_customer, login_url='customer:customerprofile-needed', redirect_field_name=None)
 def choose_addresses(request):
     customer = request.user.customerprofile
 
@@ -22,58 +25,70 @@ def choose_addresses(request):
     return render(request, 'choose_address.html', context)
 
 @login_required
+@user_passes_test(is_customer, login_url='customer:customerprofile-needed', redirect_field_name=None)
 def create_order(request):
+
     customer = request.user.customerprofile
-    customer_addresses = Address.objects.filter(customer=customer)
+
     if request.method == 'POST':
-        order_form = OrderCreationForm(request.POST)
-        if order_form.is_valid():
 
-            billing_id = order_form.cleaned_data['billingAddress']
-            delivery_id = order_form.cleaned_data['deliveryAddress']
+        # delete pending orders (and associated deliveries) if any
+        pending_orders = Order.objects.filter(customer=customer, status='Pending')
+        if pending_orders:
+            pending_orders.delete()
 
-            billing_address = Address.objects.get(id=billing_id)
-            delivery_address = Address.objects.get(id=delivery_id)
+        # retrieve post data
+        billing_id = request.POST['billingAddress']
+        delivery_id = request.POST['deliveryAddress']
 
-            order, created = Order.objects.get_or_create(
-                customer=customer,
-                billing_address=billing_address,
-            )
+        # retrieve addresses
+        billing_address = Address.objects.get(id=billing_id)
+        delivery_address = Address.objects.get(id=delivery_id)
 
-            cart_items = Cart.objects.filter(customer=customer)
+        # create Order object
+        order = Order.objects.create(
+            customer=customer,
+            billing_address=billing_address
+        )
 
-            order.price = 0
-
-            for cart_item in cart_items:
-                OrderProduct.objects.get_or_create(
-                    order=order,
-                    product=cart_item.product,
-                    number=cart_item.number,
-                )
-                order.price += cart_item.subtotal
-
-            order.save()
-
-            delivery, created = Delivery.objects.get_or_create(
+        # create OrderProduct and increment order price
+        cart_items = Cart.objects.filter(customer=customer)
+        for cart_item in cart_items:
+            OrderProduct.objects.create(
                 order=order,
-                shipping_address=delivery_address,
+                product=cart_item.product,
+                number=cart_item.number,
+                price=cart_item.product.price,
             )
+            order.price += cart_item.subtotal
 
-            if created is False and delivery.status == "Pending":
+        order.save()
 
-                delivery.estimated_arrival_date = datetime.today().date() + timedelta(days=5)
-                delivery.delivery_date = datetime.today().date() + timedelta(days=2)
-                delivery.save()
+        # create associated delivery
+        Delivery.objects.create(
+            order=order,
+            shipping_address=delivery_address,
+        )
 
-            return redirect('orders:order-details', order_id=order.id)
-        else:
-            return HttpResponse("Form is not valid.")
+        # redirect to order_details view
+        return redirect('orders:order-details', order_id=order.id)
+    
+    # redirect to cart if request method is not POST
     else:
-        order_form = OrderCreationForm(customer_addresses)
+        return redirect('cart:cart_view')
+
 
 @login_required
+@user_passes_test(is_customer, login_url='customer:customerprofile-needed', redirect_field_name=None)
 def order_details(request, order_id):
+
     order = get_object_or_404(Order, id=order_id)
+
+    # check if requested order belongs to authenticated customer
+    if order.customer != request.user.customerprofile:
+        messages.error(request, "You cannot view this order's details")
+        return redirect('home')
+
     delivery = get_object_or_404(Delivery, order=order)
     order_products = OrderProduct.objects.filter(order=order)
 

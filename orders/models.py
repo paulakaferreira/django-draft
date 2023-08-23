@@ -19,11 +19,12 @@ class Order(models.Model):
 class OrderProduct(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
     number = models.PositiveIntegerField(default=1)
 
     @property
     def subtotal(self):
-        return self.number * self.product.price
+        return self.number * self.price
 
     def __str__(self):
         return f"{self.order} / {self.product}"
