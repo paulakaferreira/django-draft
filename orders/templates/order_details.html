@@ -3,7 +3,7 @@
 {% block content %}
 <div class="container mt-5">
   <h1 class="my-3">{% block h1 %}Order Details{% endblock %}</h1>
-  <div class="card">
+  <div class="card mt-4">
     <div class="card-header">
       Order ID: {{ order.id }}
     </div>
@@ -35,16 +35,54 @@
     </tbody>
   </table>
 
-  <div class="mt-4">
+  <div class="mt-5">
     <h5>Order Price: ${{ order.price }}</h5>
     <h5>Delivery Fee: ${{ delivery.delivery_fee }}</h5>
     <h3>Total: ${{ total }}</h3>
-    <p class="lead">Please review your order details and click the button below to proceed to payment.</p>
-    <form method="post">
-      {% csrf_token %}
-      <button type="submit" class="btn btn-primary">Proceed to payment</button>
-    </form>
   </div>
+
+  {% if delivery.status == 'Pending' %}
+
+  <div class="mt-5">
+    <div class="card">
+      <div class="card-header">
+        About your delivery
+      </div>
+      <div class="card-body">
+        <p class="card-text">Address: {{ delivery.shipping_address }}</p>
+        <p class="card-text">Estimated shipping date: {{ delivery.delivery_date }}</p>
+        <p class="card-text">Estimated arrival date: {{ delivery.estimated_arrival_date }}</p>
+      </div>
+    </div>
+  </div>
+  
+  {% else %}
+
+  <div class="mt-5">
+    <div class="card">
+      <div class="card-header">
+        About your delivery
+      </div>
+      <div class="card-body">
+        <p class="card-text">Address: {{ delivery.shipping_address }}</p>
+        <p class="card-text">Your order was shipped on {{ delivery.delivery_date }}</p>
+        <p class="card-text">You were delivered on {{ delivery.estimated_arrival_date }}</p>
+      </div>
+    </div>
+  </div>
+
+  {% endif %}
+
+  {% if order.status == 'Pending' %}
+
+  <div class="mt-4">
+    <p class="lead" style="text-align: center;">Please review your order details and click the button below to proceed to payment.</p>
+    <div class="text-end mt-3">
+      <a href="/" class="btn btn-primary" >Proceed to payment</a>
+    </div>
+  </div>
+
+  {% endif %}
 
 </div>
 {% endblock %}
