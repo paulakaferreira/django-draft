@@ -1,12 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Order, OrderProduct, Delivery
-from .forms import OrderCreationForm
 from django.contrib.auth.decorators import login_required, user_passes_test
 from customer.models import Address
 from django.shortcuts import render, redirect
 from cart.models import Cart
-from django.http import HttpResponse
-from datetime import datetime, timedelta
 from django.contrib import messages
 from customer.authorizations import is_customer
 
