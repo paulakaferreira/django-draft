@@ -101,8 +101,15 @@ def order_details(request, order_id):
 
 @login_required
 @user_passes_test(is_customer, login_url='customer:customerprofile-needed', redirect_field_name=None)
-def payment(request):
-    return render(request, 'confirm_payment.html')
+def payment(request, order_id):
+
+    order = get_object_or_404(Order, id=order_id)
+
+    context = {
+        'order': order,
+    }
+
+    return render(request, 'confirm_payment.html', context)
 
 
 @login_required
@@ -118,9 +125,15 @@ def payment_success(request, order_id):
     payment, created = Payment.objects.get_or_create(
         order = order
     )
+
+    context = {
+        'order': order,
+        'payment': payment,
+    }
     
     if created:
-        return redirect('payment-success', order_id=order_id)
+        return render(request, 'payment_success.html', context)
     else:
-        return redirect('/', order_id=order_id)
+        # TODO: change redirect page in case of payment error
+        return redirect('cart:cart_view')
 

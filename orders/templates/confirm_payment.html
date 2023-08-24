@@ -10,10 +10,10 @@
                 <div class="card-body">
                     <h2 class="card-title">Confirm Your Payment</h2>
                     <p class="card-text">Please review your payment details before confirming.</p>
-                    <h5>Payment Method</h5>
-                    <form method="post" action="{% url 'create-payment' order_id %}">
+                    <h5>Order ID : {{ order.id }}</h5>
+                    <form method="post" action="{% url 'orders:payment-success' order_id=order.id %}">
                         {% csrf_token %}
-                        <button type="submit" class="btn btn-primary">Create Payment</button>
+                        <button type="submit" class="btn btn-primary">Confirm Purchase</button>
                     </form>
                     <hr>
                 </div>
