@@ -132,6 +132,9 @@ def payment_success(request, order_id):
     }
     
     if created:
+        order.status = 'Complete'
+        order.save()
+
         return render(request, 'payment_success.html', context)
     else:
         # TODO: change redirect page in case of payment error
