@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Order, OrderProduct, Delivery
+from .models import Order, OrderProduct, Delivery, Payment
 from django.contrib.auth.decorators import login_required, user_passes_test
 from customer.models import Address
 from django.shortcuts import render, redirect
@@ -97,3 +97,30 @@ def order_details(request, order_id):
     }
 
     return render(request, 'order_details.html', context)
+
+
+@login_required
+@user_passes_test(is_customer, login_url='customer:customerprofile-needed', redirect_field_name=None)
+def payment(request):
+    return render(request, 'confirm_payment.html')
+
+
+@login_required
+@user_passes_test(is_customer, login_url='customer:customerprofile-needed', redirect_field_name=None)
+def payment_success(request, order_id):
+    
+    order = get_object_or_404(Order, id=order_id)
+
+    if order.customer != request.user.customerprofile:
+        messages.error(request, "You cannot view this payment")
+        return redirect('home')
+    
+    payment, created = Payment.objects.get_or_create(
+        order = order
+    )
+    
+    if created:
+        return redirect('payment-success', order_id=order_id)
+    else:
+        return redirect('/', order_id=order_id)
+

@@ -39,3 +39,10 @@ class Delivery(models.Model):
 
     def __str__(self):
         return f"Delivery to {self.shipping_address}"
+    
+class Payment(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.PROTECT)
+    date = models.DateField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.order.customer}'s paymenet of order {self.order} on {self.date}"
