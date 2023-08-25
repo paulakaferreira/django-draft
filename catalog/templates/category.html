@@ -16,7 +16,7 @@
                 {% else %}
                 <img src="/media/product_images/placeholder.png" alt="{{ product.name }}" height="140">
                 {% endif %}
-                <div style="height: 250px">
+                <div style="height: 180px">
                     <h3 class="fw-normal">{{ product.name }}</h3>
                     <p>{{ product.description|truncatechars:100 }}</p>
                     {% if product.get_average_rating %}
@@ -34,11 +34,11 @@
                     </p>
                     {% endif %}
                     <p>${{ product.price }}</p>
-                    <p>Categories :
+                    <!-- <p>Categories :
                         {% for category in product.categories.all %}
                         <a href="{% url 'catalog:category_view' slug=category.slug %}">{{ category.name }}</a>
                         {% endfor %}
-                    </p>
+                    </p> -->
                 </div>
                 <p><a class="btn btn-secondary" href="{% url 'catalog:product_view' slug=product.slug %}">View details
                         &raquo;</a></p>
@@ -49,6 +49,46 @@
     {% else %}
     <p>No products available in this category.</p>
     {% endif %}
+
+    {% for subcategory in subcategories %}
+    {% if subcategory.products.all %}
+    <h3 class="my-3">{{ subcategory.name }}</h3>
+    <div class="container marketing" style="margin-top:30px">
+        <div class="row">
+            {% for product in subcategory.products.all %}
+            <div class="col-lg-4" style="text-align: center;">
+                {% if product.image %}
+                <img src="{{ product.image.url }}" alt="{{ product.name }}" height="140">
+                {% else %}
+                <img src="/media/product_images/placeholder.png" alt="{{ product.name }}" height="140">
+                {% endif %}
+                <div style="height: 180px">
+                    <h3 class="fw-normal">{{ product.name }}</h3>
+                    <p>{{ product.description|truncatechars:100 }}</p>
+                    {% if product.get_average_rating %}
+                    <p>
+                        {% for n in '01234'|make_list %}
+                        {% if forloop.counter <= product.get_average_rating %}
+                        <i class="bi bi-star-fill" style="color:goldenrod"></i>
+                        {% elif forloop.counter0 >= product.get_average_rating  %}
+                        <i class="bi bi-star" style="color:goldenrod"></i>
+                        {% else %}
+                        <i class="bi bi-star-half" style="color:goldenrod"></i>
+                        {% endif %}
+                        {% endfor %}
+                        ({{ product.reviews.count }})
+                    </p>
+                    {% endif %}
+                    <p>${{ product.price }}</p>
+                </div>
+                <p><a class="btn btn-secondary" href="{% url 'catalog:product_view' slug=product.slug %}">View details
+                        &raquo;</a></p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+    {% endfor %}
 </div>
 
 {% endblock %}

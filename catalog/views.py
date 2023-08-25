@@ -29,7 +29,11 @@ def product_view(request, slug):
 
 def category_view(request, slug):
     category = get_object_or_404(Category, slug=slug)
-    context = {'category': category}
+    subcategories = Category.objects.filter(supercategory=category)
+    context = {
+        'category': category,
+        'subcategories': subcategories,
+    }
     return render(request, 'category.html', context)
 
 def search_results_view(request):
