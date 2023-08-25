@@ -105,6 +105,10 @@ def payment(request, order_id):
 
     order = get_object_or_404(Order, id=order_id)
 
+    if order.customer != request.user.customerprofile:
+        messages.error(request, "You cannot view this payment")
+        return redirect('home')
+
     context = {
         'order': order,
     }
