@@ -136,9 +136,13 @@ def payment_success(request, order_id):
     }
     
     if created:
+        # change order status
         order.status = 'Complete'
         order.save()
-
+        # empty cart
+        cart_items = Cart.objects.filter(customer=request.user.customerprofile)
+        for item in cart_items:
+            item.delete()
         return render(request, 'payment_success.html', context)
     else:
         # TODO: change redirect page in case of payment error
