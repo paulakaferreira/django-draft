@@ -30,7 +30,9 @@
           </div>
         </div>
       </div>
-      {% bootstrap_button 'Place Order' button_type='submit' button_class='btn-primary' %}
+      <div class="text-end">
+        {% bootstrap_button 'Place Order' button_type='submit' button_class='btn-primary' %}
+      </div>
     </form>
   {% else %}
     <p>No addresses available for the customer. Please add an address:</p>
