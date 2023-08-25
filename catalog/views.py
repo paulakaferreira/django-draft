@@ -1,6 +1,7 @@
 from django.shortcuts import get_object_or_404, render, redirect
 from django.db.models import Q
 from catalog.models import Product, Category
+from orders.models import Order
 from .forms import ReviewForm
 from django.contrib.auth.decorators import login_required, user_passes_test
 from customer.authorizations import is_customer
@@ -9,6 +10,7 @@ from customer.authorizations import is_customer
 
 def product_view(request, slug):
 
+    customer = request.user.customerprofile
     product = get_object_or_404(Product, slug=slug)
     review_form = ReviewForm()
 
@@ -17,12 +19,18 @@ def product_view(request, slug):
     if not request.user.is_authenticated or not is_customer(request.user):
         reviewed = False
     else:
-        reviewed = bool(product.reviews.filter(customer=request.user.customerprofile))
+        reviewed = bool(product.reviews.filter(customer=customer))
+        bought = False
+        orders = Order.objects.filter(customer=customer, status='Complete')
+        for order in orders:
+            if product in order.products.all():
+                bought = True
 
     context = {
         'product': product,
         'review_form': review_form,
-        'reviewed': reviewed
+        'reviewed': reviewed,
+        'bought': bought,
         }
     
     return render(request, 'product.html', context)
