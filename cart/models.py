@@ -8,6 +8,7 @@ class Cart(models.Model):
     customer = models.ForeignKey(CustomerProfile, on_delete=models.CASCADE)
     number = models.PositiveIntegerField(default=1)
 
+    @property
     def subtotal(self):
         return self.number * self.product.price
 
