@@ -14,7 +14,7 @@ class Order(models.Model):
     billing_address = models.ForeignKey(Address, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"{self.customer}'s order on {self.date}"
+        return f"{self.customer}'s order on {self.date.ctime()}"
 
 class OrderProduct(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
