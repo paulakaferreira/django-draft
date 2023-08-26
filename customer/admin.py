@@ -11,5 +11,5 @@ class CustomerProfileAdmin(admin.ModelAdmin):
 
 @admin.register(models.Address)
 class AddressAdmin(admin.ModelAdmin):
-    list_display = ["pk", "customer", "__str__"]
+    list_display = ["name", "customer", "__str__"]
     form = forms.AddressForm
