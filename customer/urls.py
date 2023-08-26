@@ -16,7 +16,5 @@ urlpatterns = [
     path('edit-address/', views.edit_address, name='edit-address'),
     path('delete-address-confirmation/', views.delete_address_confirmation, name='delete-address-confirmation'),
     path('delete-address/<int:address_id>', views.delete_address, name='delete-address'),
-    # path('login/', include('django.contrib.auth.urls'))
-    # path('login/', views.login, name='login')
     # Other URL patterns for the "customer" app can be added here
 ]

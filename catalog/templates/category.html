@@ -36,11 +36,11 @@
                     <p>${{ product.price }}</p>
                     <!-- <p>Categories :
                         {% for category in product.categories.all %}
-                        <a href="{% url 'catalog:category_view' slug=category.slug %}">{{ category.name }}</a>
+                        <a href="{% url 'catalog:category-view' slug=category.slug %}">{{ category.name }}</a>
                         {% endfor %}
                     </p> -->
                 </div>
-                <p><a class="btn btn-secondary" href="{% url 'catalog:product_view' slug=product.slug %}">View details
+                <p><a class="btn btn-secondary" href="{% url 'catalog:product-view' slug=product.slug %}">View details
                         &raquo;</a></p>
             </div>
             {% endfor %}
@@ -81,7 +81,7 @@
                     {% endif %}
                     <p>${{ product.price }}</p>
                 </div>
-                <p><a class="btn btn-secondary" href="{% url 'catalog:product_view' slug=product.slug %}">View details
+                <p><a class="btn btn-secondary" href="{% url 'catalog:product-view' slug=product.slug %}">View details
                         &raquo;</a></p>
             </div>
             {% endfor %}

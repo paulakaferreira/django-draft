@@ -19,7 +19,7 @@ def choose_addresses(request):
         'customer_addresses': customer_addresses,
     }
 
-    return render(request, 'choose_address.html', context)
+    return render(request, 'choose-address.html', context)
 
 @login_required
 @user_passes_test(is_customer, login_url='customer:customerprofile-needed', redirect_field_name=None)
@@ -72,7 +72,7 @@ def create_order(request):
     
     # redirect to cart if request method is not POST
     else:
-        return redirect('cart:cart_view')
+        return redirect('cart:cart-view')
 
 
 @login_required
@@ -96,7 +96,7 @@ def order_details(request, order_id):
         'order_products': order_products,
     }
 
-    return render(request, 'order_details.html', context)
+    return render(request, 'order-details.html', context)
 
 
 @login_required
@@ -113,7 +113,7 @@ def payment(request, order_id):
         'order': order,
     }
 
-    return render(request, 'confirm_payment.html', context)
+    return render(request, 'confirm-payment.html', context)
 
 
 @login_required
@@ -143,8 +143,8 @@ def payment_success(request, order_id):
         cart_items = Cart.objects.filter(customer=request.user.customerprofile)
         for item in cart_items:
             item.delete()
-        return render(request, 'payment_success.html', context)
+        return render(request, 'payment-success.html', context)
     else:
         # TODO: change redirect page in case of payment error
-        return redirect('cart:cart_view')
+        return redirect('cart:cart-view')
 

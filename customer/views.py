@@ -27,7 +27,7 @@ def register(request):
 
 
 def registration_success(request):
-    return render(request, 'registration/registration_success.html')
+    return render(request, 'registration/registration-success.html')
 
 
 def login(request):
@@ -67,7 +67,7 @@ def profile(request):
         'addresses': customer_addresses,
     }
     
-    return render(request, 'account_management/profile.html', context)
+    return render(request, 'account-management/profile.html', context)
 
 
 @login_required
@@ -94,7 +94,7 @@ def edit_profile(request):
         'profile_form': profile_form,
     }
 
-    return render(request, 'account_management/edit_profile.html', context)
+    return render(request, 'account-management/edit-profile.html', context)
 
 
 
@@ -128,7 +128,7 @@ def edit_address(request):
         # 'current_tab': current_tab,  # Pass the current_tab value to the template context
     }
 
-    return render(request, 'account_management/edit_address.html', context)
+    return render(request, 'account-management/edit-address.html', context)
 
 
 @login_required
@@ -150,7 +150,7 @@ def delete_address_confirmation(request):
         'address': address,
     }
 
-    return render(request, 'account_management/delete_address.html', context)
+    return render(request, 'account-management/delete-address.html', context)
 
 
 @login_required
@@ -179,4 +179,4 @@ def change_password(request):
     context = {
         'password_form': password_form,
     }
-    return render(request, 'account_management/change_password.html', context)
+    return render(request, 'account-management/change-password.html', context)
