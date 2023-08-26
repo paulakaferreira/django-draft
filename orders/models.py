@@ -37,6 +37,9 @@ class Delivery(models.Model):
     shipping_address = models.ForeignKey(Address, on_delete=models.CASCADE)
     delivery_fee = models.DecimalField(max_digits=10, decimal_places=2, null=True, default=1.99)
 
+    class Meta:
+        verbose_name_plural = 'deliveries'
+
     def __str__(self):
         return f"Delivery to {self.shipping_address}"
     
