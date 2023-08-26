@@ -45,4 +45,4 @@ class Payment(models.Model):
     date = models.DateField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.order.customer}'s paymenet of order {self.order} on {self.date}"
+        return f"{self.order.customer}'s payment of order {self.order} on {self.date}"
