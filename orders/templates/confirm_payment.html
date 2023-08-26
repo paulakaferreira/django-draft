@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block title %}Payment Confirmation{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title">Confirm Your Payment</h2>
+                    <p class="card-text">Please review your payment details before confirming.</p>
+                    <h5>Order ID : {{ order.id }}</h5>
+                    <form method="post" action="{% url 'orders:payment-success' order_id=order.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-primary">Confirm Purchase</button>
+                    </form>
+                    <hr>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
