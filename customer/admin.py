@@ -6,10 +6,10 @@ from . import forms
 
 @admin.register(models.CustomerProfile)
 class CustomerProfileAdmin(admin.ModelAdmin):
-    form = forms.CustomerProfileForm
+    form = forms.CustomerProfileAdminForm
 
 
 @admin.register(models.Address)
 class AddressAdmin(admin.ModelAdmin):
     list_display = ["name", "customer", "__str__"]
-    form = forms.AddressForm
+    form = forms.AddressAdminForm
