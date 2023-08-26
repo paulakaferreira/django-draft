@@ -57,8 +57,11 @@ def search_results_view(request):
     ) # get all products whose name OR description contains query
 
     sort = request.GET.get('sort') # retrieve sort option if there is one
-    if sort == 'top-rated': # not implemented yet : have to deal with non-existent rating field
-        products = sorted(products, key=lambda l: l.get_average_rating(), reverse=True)
+    if sort == 'top-rated':
+        average_ratings = dict()
+        for product in products: # dictionary of avg ratings ; replace None rating by 0 to support sorting
+            average_ratings[product] = (product.get_average_rating() or 0)
+        products = sorted(products, key=lambda l: average_ratings[l], reverse=True) # sort products by rating
     elif sort == 'l-exp':
         products = products.order_by('price')
     elif sort == 'm-exp':
