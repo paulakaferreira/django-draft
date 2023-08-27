@@ -8,8 +8,8 @@
   {% if customer_addresses %}
     <form method="post" action="{% url 'orders:create-order' %}">
       {% csrf_token %}
-      <div class="row">
-        <div class="col-md-6">
+      <div class="row align-items-end">
+        <div class="col-md-5">
           <div class="mb-3">
             <label for="billingAddress" class="form-label">Billing Address</label>
             <select name="billingAddress" id="billingAddress" class="form-select">
@@ -19,7 +19,7 @@
             </select>
           </div>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-5">
           <div class="mb-3">
             <label for="deliveryAddress" class="form-label">Delivery Address</label>
             <select name="deliveryAddress" id="deliveryAddress" class="form-select">
@@ -28,6 +28,9 @@
               {% endfor %}
             </select>
           </div>
+        </div>
+        <div class="col-md-2 text-bottom mb-3 text-end">
+          <a href="{% url 'customer:edit-address' %}" class="btn btn-primary">Add an address</a>
         </div>
       </div>
       <div class="text-end mt-3">
