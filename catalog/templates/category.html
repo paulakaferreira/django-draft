@@ -62,9 +62,9 @@
                 {% else %}
                 <img src="/media/product_images/placeholder.png" alt="{{ product.name }}" height="140">
                 {% endif %}
-                <div style="height: 180px">
+                <div>
                     <h3 class="fw-normal">{{ product.name }}</h3>
-                    <p>{{ product.description|truncatechars:100 }}</p>
+                    <p>{{ product.description|truncatechars:80 }}</p>
                     {% if product.get_average_rating %}
                     <p>
                         {% for n in '01234'|make_list %}
