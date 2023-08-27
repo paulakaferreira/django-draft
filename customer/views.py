@@ -1,4 +1,6 @@
 from django.shortcuts import render, redirect
+
+from orders.models import Order
 from .forms import CustomerProfileForm, AddressForm, SignUpForm, EditUserForm
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
@@ -62,9 +64,12 @@ def profile(request):
 
     customer_addresses = Address.objects.filter(customer=customer_profile)
 
+    customer_orders = Order.objects.filter(customer=customer_profile)
+
     context = {
         'profile': customer_profile,
         'addresses': customer_addresses,
+        'orders': customer_orders,
     }
     
     return render(request, 'account-management/profile.html', context)
