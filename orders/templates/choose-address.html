@@ -30,7 +30,9 @@
           </div>
         </div>
       </div>
-      <div class="text-end">
+      <div class="text-end mt-3">
+        {% url 'cart:cart-view' as cart_redirect %}
+        {% bootstrap_button 'Cancel' button_type='link' href=cart_redirect button_class='btn-secondary' extra_classes='mx-3' %}
         {% bootstrap_button 'Place Order' button_type='submit' button_class='btn-primary' %}
       </div>
     </form>
