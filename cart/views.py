@@ -13,7 +13,7 @@ def cart_view(request):
         'cart_items': cart_items,
         'select_quantity_iterator': range(9),
         }
-    return render(request, 'cart_view.html', context)
+    return render(request, 'cart-view.html', context)
 
 
 @login_required
@@ -24,9 +24,9 @@ def add_to_cart(request, product_id):
     cart_item, created = Cart.objects.get_or_create(product=product, customer=customer)
     if not created:
         quantity = cart_item.number + 1
-        return redirect('cart:change_quantity', product_id=product_id, item_number=quantity)
+        return redirect('cart:change-quantity', product_id=product_id, item_number=quantity)
     else:
-        return redirect('cart:cart_view')
+        return redirect('cart:cart-view')
 
 
 @login_required
@@ -65,7 +65,7 @@ def change_quantity(request, product_id, item_number):
                 messages.warning(request, f"Cannot resolve {item_number} to a valid quantity")
     except:
         messages.warning(request, "Cannot access desired item")
-    return redirect('cart:cart_view')
+    return redirect('cart:cart-view')
 
 
 @login_required
@@ -75,4 +75,4 @@ def remove_from_cart(request, product_id):
     customer = request.user.customerprofile
     cart_item = Cart.objects.get(product=product, customer=customer)
     cart_item.delete()
-    return redirect('cart:cart_view')
+    return redirect('cart:cart-view')

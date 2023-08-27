@@ -35,9 +35,9 @@
           <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">Categories</a>
           <ul class="dropend dropdown-menu">
             {% for supercategory in supercategories %}
-            <li><a class="dropdown-item" style="font-weight: bold;" href="{% url 'catalog:category_view' slug=supercategory.slug %}">{{ supercategory.name }}</a></li>
+            <li><a class="dropdown-item" style="font-weight: bold;" href="{% url 'catalog:category-view' slug=supercategory.slug %}">{{ supercategory.name }}</a></li>
             {% for subcategory in supercategory.subcategories.all %}
-            <li><a class="dropdown-item" style="font-style: italic; text-indent: 1em;" href="{% url 'catalog:category_view' slug=subcategory.slug %}">{{ subcategory.name }}</a></li>
+            <li><a class="dropdown-item" style="font-style: italic; text-indent: 1em;" href="{% url 'catalog:category-view' slug=subcategory.slug %}">{{ subcategory.name }}</a></li>
             {% endfor %}
             {% endfor %}
           </ul>
@@ -62,7 +62,7 @@
           <a class="nav-link active dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">My account</a>
           <ul class="dropdown-menu dropdown-menu-end" style="text-align: right;">
             <li><a class="dropdown-item" href="{% url 'customer:profile' %}">Profile</a></li>
-            <li><a class="dropdown-item" href="{% url 'cart:cart_view' %}">Cart</a></li>
+            <li><a class="dropdown-item" href="{% url 'cart:cart-view' %}">Cart</a></li>
             <li><a class="dropdown-item" href="#">Settings</a></li>
             <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item" href="{% url 'customer:logout' %}">Logout</a></li>

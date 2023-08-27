@@ -10,7 +10,6 @@ from customer.authorizations import is_customer
 
 def product_view(request, slug):
 
-    customer = request.user.customerprofile
     product = get_object_or_404(Product, slug=slug)
     review_form = ReviewForm()
 
@@ -18,10 +17,11 @@ def product_view(request, slug):
     # in that case, template won't display the review form
     if not request.user.is_authenticated or not is_customer(request.user):
         reviewed = False
-    else:
-        reviewed = bool(product.reviews.filter(customer=customer))
         bought = False
-        orders = Order.objects.filter(customer=customer, status='Complete')
+    else:
+        reviewed = bool(product.reviews.filter(customer=request.user.customerprofile))
+        bought = False
+        orders = Order.objects.filter(customer=request.user.customerprofile, status='Complete')
         for order in orders:
             if product in order.products.all():
                 bought = True
@@ -87,7 +87,7 @@ def add_review(request, slug):
             review.customer = request.user.customerprofile
             review.product = product
             review.save()
-    return redirect('catalog:product_view', slug=slug)
+    return redirect('catalog:product-view', slug=slug)
 
 def catalog_view(request):
     products = Product.objects.all()
