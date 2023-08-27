@@ -123,7 +123,11 @@ def edit_address(request):
             address = address_form.save(commit=False)
             address.customer = profile
             address.save()
-            return redirect('customer:profile')
+            # redirect to whatever page led the user to edit-address (useful when add address during order)
+            if(request.POST.get('next')):
+                return redirect(request.POST['next'])
+            else:
+                return redirect('customer:profile')
     else:
         address_form = AddressForm(instance=address)
 
