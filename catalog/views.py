@@ -9,6 +9,9 @@ from customer.authorizations import is_customer
 # Create your views here.
 
 def product_view(request, slug):
+    """Renders view for product that matches slug and reviews for this product.
+    Checks if customer is authenticated ; in that case, checks if customer has already bought the product
+    and left a review to determine if they can leave a review."""
 
     product = get_object_or_404(Product, slug=slug)
     review_form = ReviewForm()
@@ -36,16 +39,29 @@ def product_view(request, slug):
     return render(request, 'product.html', context)
 
 def category_view(request, slug):
-    category = get_object_or_404(Category, slug=slug)
-    subcategories = Category.objects.filter(supercategory=category)
+    """Renders view for category that matches slug. Gets subcategories, checks if category and
+    subcategories are empty. Returns a HttpResponse with category template"""
+
+    category = get_object_or_404(Category, slug=slug) # retrieve category
+    subcategories = Category.objects.filter(supercategory=category) # retrieve subcategories
+
+    # if neither category nor subcategories have any products, category is empty
+    if not category.products.all() and not Product.objects.filter(categories__in=subcategories):
+        empty_category = True
+    else:
+        empty_category = False
+
     context = {
         'category': category,
         'subcategories': subcategories,
+        'empty_category': empty_category,
     }
     return render(request, 'category.html', context)
 
 def search_results_view(request):
-    """Returns products that match submitted query"""
+    """Returns a list of products that match submitted query (transmitted as a GET parameter).
+    List can be ordered by four criteria, also transmitted as GET parameters : latest (default),
+    top rated (top-rated), most expensive (m-exp), least expensive (l-exp)."""
 
     query = request.GET.get('query') # retrieve query
     if not query:
@@ -79,17 +95,20 @@ def search_results_view(request):
 @login_required
 @user_passes_test(is_customer, login_url='customer:customerprofile-needed', redirect_field_name=None)
 def add_review(request, slug):
-    product = get_object_or_404(Product, slug=slug)
+    """Takes in a POST request on a product (retrieved by its slug), registers it in database
+    and redirects to product view."""
+    product = get_object_or_404(Product, slug=slug) # retrieve product
     if request.method == 'POST':
-        review_form = ReviewForm(request.POST)
+        review_form = ReviewForm(request.POST) # submit form data
         if review_form.is_valid():
-            review = review_form.save(commit=False)
+            review = review_form.save(commit=False) # needs adding customer and product fields before committing
             review.customer = request.user.customerprofile
             review.product = product
-            review.save()
-    return redirect('catalog:product-view', slug=slug)
+            review.save() # final save to database
+    return redirect('catalog:product-view', slug=slug) # redirect to same product page
 
 def catalog_view(request):
+    """Renders a page with all catalog products."""
     products = Product.objects.all()
     context = {
         'products': products,

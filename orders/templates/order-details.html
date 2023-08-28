@@ -78,6 +78,7 @@
   <div class="mt-4">
     <p class="lead" style="text-align: center;">Please review your order details and click the button below to proceed to payment.</p>
     <div class="text-end mt-3">
+      <a href="{% url 'cart:cart-view' %}" class="btn btn-secondary mx-3">Cancel</a>
       <a href="{% url 'orders:confirm-payment' order_id=order.id %}" class="btn btn-primary" >Proceed to payment</a>
     </div>
   </div>

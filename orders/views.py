@@ -11,6 +11,7 @@ from customer.authorizations import is_customer
 @login_required
 @user_passes_test(is_customer, login_url='customer:customerprofile-needed', redirect_field_name=None)
 def choose_addresses(request):
+    """Renders choose-adress template with customer addresses as context"""
     customer = request.user.customerprofile
 
     customer_addresses = Address.objects.filter(customer=customer)
@@ -24,6 +25,8 @@ def choose_addresses(request):
 @login_required
 @user_passes_test(is_customer, login_url='customer:customerprofile-needed', redirect_field_name=None)
 def create_order(request):
+    """Takes a POST request with address data, then creates an order based on cart items for authenticated
+    customer"""
 
     customer = request.user.customerprofile
 
@@ -78,6 +81,8 @@ def create_order(request):
 @login_required
 @user_passes_test(is_customer, login_url='customer:customerprofile-needed', redirect_field_name=None)
 def order_details(request, order_id):
+    """Renders order-details template with requested order info as context. 404 if requested order does not
+    exist. Also prevents a customer from seeing another customer's order."""
 
     order = get_object_or_404(Order, id=order_id)
 
@@ -102,12 +107,22 @@ def order_details(request, order_id):
 @login_required
 @user_passes_test(is_customer, login_url='customer:customerprofile-needed', redirect_field_name=None)
 def payment(request, order_id):
+    """Payment confirmation page view. Prevents a customer from seeing another customer's payment."""
 
+    # retrieve order from id
     order = get_object_or_404(Order, id=order_id)
 
+    # check it is the right customer
     if order.customer != request.user.customerprofile:
         messages.error(request, "You cannot view this payment")
         return redirect('home')
+    
+    # check there are still enough products in stock
+    order_products = OrderProduct.objects.filter(order=order)
+    for order_product in order_products:
+        if order_product.number > order_product.product.stock:
+            messages.error(request, f"We're sorry but there are only {order_product.product.stock} {order_product.product} in stock. Please modify your order.")
+            return redirect('cart:cart-view')
 
     context = {
         'order': order,
@@ -119,13 +134,18 @@ def payment(request, order_id):
 @login_required
 @user_passes_test(is_customer, login_url='customer:customerprofile-needed', redirect_field_name=None)
 def payment_success(request, order_id):
+    """Payment success page view. Creates payment associated with requested order, change order status to 'Complete'
+    and deletes items from cart. Prevents a customer from seeing another customer's payment."""
     
+    # retrieve order from id
     order = get_object_or_404(Order, id=order_id)
 
+    # check if it is the right customer
     if order.customer != request.user.customerprofile:
         messages.error(request, "You cannot view this payment")
         return redirect('home')
     
+    # create payment associated to order
     payment, created = Payment.objects.get_or_create(
         order = order
     )
@@ -142,6 +162,9 @@ def payment_success(request, order_id):
         # empty cart
         cart_items = Cart.objects.filter(customer=request.user.customerprofile)
         for item in cart_items:
+            product = item.product
+            product.stock -= item.number # decrement stock
+            product.save()
             item.delete()
         return render(request, 'payment-success.html', context)
     else:

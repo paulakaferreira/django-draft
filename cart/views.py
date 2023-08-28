@@ -7,6 +7,7 @@ from django.contrib import messages
 @login_required
 @user_passes_test(is_customer, login_url='customer:customerprofile-needed', redirect_field_name=None)
 def cart_view(request):
+    """Renders a page with a list of items in customer's cart."""
     customer = request.user.customerprofile
     cart_items = Cart.objects.filter(customer=customer)
     context = {
@@ -19,10 +20,13 @@ def cart_view(request):
 @login_required
 @user_passes_test(is_customer, login_url='customer:customerprofile-needed', redirect_field_name=None)
 def add_to_cart(request, product_id):
+    """Adds a product (retrieved by its id) to authenticated customer's cart.
+    Increases quantity by redirecting to change_quantity() if product already in cart.
+    Otherwise, redirects to cart_view()"""
     product = Product.objects.get(id=product_id)
     customer = request.user.customerprofile
     cart_item, created = Cart.objects.get_or_create(product=product, customer=customer)
-    if not created:
+    if not created: # product is already in cart
         quantity = cart_item.number + 1
         return redirect('cart:change-quantity', product_id=product_id, item_number=quantity)
     else:
@@ -32,6 +36,16 @@ def add_to_cart(request, product_id):
 @login_required
 @user_passes_test(is_customer, login_url='customer:customerprofile-needed', redirect_field_name=None)
 def change_quantity(request, product_id, item_number):
+    """Takes in a product id and desired quantity as parameters. Retrieves authenticated customer
+    and changes quantity of product in their cart.
+    
+    Throws exceptions and generate messages if :
+    * product is no longer available (deletes cart item)
+    * asked quantity outnumbers available stock (sets quantity to max availability)
+    * requested quantity is not valid
+    * product is no longer in cart
+    
+    Redirects to cart_view"""
 
     user = request.user
     customer = user.customerprofile
@@ -71,6 +85,7 @@ def change_quantity(request, product_id, item_number):
 @login_required
 @user_passes_test(is_customer, login_url='customer:customerprofile-needed', redirect_field_name=None)
 def remove_from_cart(request, product_id):
+    """Removes product from cart and redirects to cart_view"""
     product = Product.objects.get(id=product_id)
     customer = request.user.customerprofile
     cart_item = Cart.objects.get(product=product, customer=customer)

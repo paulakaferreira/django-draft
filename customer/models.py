@@ -26,5 +26,8 @@ class Address(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     last_updated = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        verbose_name_plural = 'addresses'
+
     def __str__(self):
         return f"{self.street_number} {self.street}\n{self.postal_code} {self.city}\n{self.country}"

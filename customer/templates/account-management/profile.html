@@ -93,6 +93,38 @@
         </div>
     {% endif %}
 
+    <div class="mb-5"></div>
+
+    {% if orders %}
+    <div class="card mb-3" id="order-history">
+        <div class="card-header">
+            <h2 class="card-title">Order history</h2>
+        </div>
+        <div class="card-body">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Total</th>
+                        <th>Status</th>
+                        <th>Delivery</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in orders %}
+                    <tr>
+                        <td><a href="{% url 'orders:order-details' order.id %}">Your order from {{ order.date }}</a></td>
+                        <td>{{ order.price }}$</td>
+                        <td>{{ order.status }}</td>
+                        <td>{{ order.delivery.status }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% endif %}
+
     <script> // Create tab event
         document.addEventListener('DOMContentLoaded', function() {
             var addressTabs = new bootstrap.Tab(document.getElementById('addressTabs'));

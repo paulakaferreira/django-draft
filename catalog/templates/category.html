@@ -6,7 +6,7 @@
 
 <div class="content-container">
     <h2 class="my-3">Products in {{ category.name }}</h2>
-    {% if category.products.all %}
+    {% if not empty_category %}
     <div class="container marketing" style="margin-top:30px">
         <div class="row">
             {% for product in category.products.all %}
@@ -16,7 +16,7 @@
                 {% else %}
                 <img src="/media/product_images/placeholder.png" alt="{{ product.name }}" height="140">
                 {% endif %}
-                <div style="height: 180px">
+                <div>
                     <h3 class="fw-normal">{{ product.name }}</h3>
                     <p>{{ product.description|truncatechars:100 }}</p>
                     {% if product.get_average_rating %}
@@ -34,11 +34,6 @@
                     </p>
                     {% endif %}
                     <p>${{ product.price }}</p>
-                    <!-- <p>Categories :
-                        {% for category in product.categories.all %}
-                        <a href="{% url 'catalog:category-view' slug=category.slug %}">{{ category.name }}</a>
-                        {% endfor %}
-                    </p> -->
                 </div>
                 <p><a class="btn btn-secondary" href="{% url 'catalog:product-view' slug=product.slug %}">View details
                         &raquo;</a></p>
@@ -62,9 +57,9 @@
                 {% else %}
                 <img src="/media/product_images/placeholder.png" alt="{{ product.name }}" height="140">
                 {% endif %}
-                <div style="height: 180px">
+                <div>
                     <h3 class="fw-normal">{{ product.name }}</h3>
-                    <p>{{ product.description|truncatechars:100 }}</p>
+                    <p>{{ product.description|truncatechars:80 }}</p>
                     {% if product.get_average_rating %}
                     <p>
                         {% for n in '01234'|make_list %}

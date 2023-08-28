@@ -29,6 +29,10 @@ class Category(SlugModel):
         verbose_name = 'category'
         verbose_name_plural = 'categories'
 
+    @property
+    def product_number(self):
+        return Product.objects.filter(categories=self).count()
+
     def __str__(self):
         return self.name
 

@@ -14,6 +14,7 @@
           {% bootstrap_form address_form layout='horizontal' %}
           <div class="text-end my-3">
             {% if request.META.HTTP_REFERER %}
+                <input type="hidden" name="next" value="{{ request.META.HTTP_REFERER }}">
                 {% bootstrap_button 'Cancel' button_type='link' href=request.META.HTTP_REFERER button_class='btn-secondary' extra_classes='mx-3' %}
             {% else %}
                 {% bootstrap_button 'Cancel' button_type='link' href='/' button_class='btn-secondary' extra_classes='mx-3' %}

@@ -14,7 +14,7 @@ class Order(models.Model):
     billing_address = models.ForeignKey(Address, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"{self.customer}'s order on {self.date}"
+        return f"{self.customer}'s order on {self.date.ctime()}"
 
 class OrderProduct(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
@@ -37,6 +37,9 @@ class Delivery(models.Model):
     shipping_address = models.ForeignKey(Address, on_delete=models.CASCADE)
     delivery_fee = models.DecimalField(max_digits=10, decimal_places=2, null=True, default=1.99)
 
+    class Meta:
+        verbose_name_plural = 'deliveries'
+
     def __str__(self):
         return f"Delivery to {self.shipping_address}"
     
@@ -45,4 +48,4 @@ class Payment(models.Model):
     date = models.DateField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.order.customer}'s paymenet of order {self.order} on {self.date}"
+        return f"{self.order.customer}'s payment of order {self.order} on {self.date}"

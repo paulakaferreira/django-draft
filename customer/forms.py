@@ -16,11 +16,29 @@ class CustomerProfileForm(forms.ModelForm):
         model = models.CustomerProfile
         exclude = ['created', 'last_updated', 'user', 'products']
 
+class CustomerProfileAdminForm(forms.ModelForm):
+    """Customer form specific to admin app: add User field"""
+    class Meta:
+        model = models.CustomerProfile
+        exclude = ['created', 'last_updated', 'products']
+        widgets = {
+            'user': forms.Select(attrs={'required': False}),
+        }
+
 class AddressForm(forms.ModelForm):
     """Add an address form"""
     class Meta:
         model = models.Address
         exclude = ['created', 'last_updated', 'customer']
+
+class AddressAdminForm(forms.ModelForm):
+    """Address form for admin app: add customer field"""
+    class Meta:
+        model = models.Address
+        exclude = ['created', 'last_updated']
+        widgets = {
+            'customer': forms.Select(attrs={'required': False}),
+        }
 
 class EditUserForm(forms.ModelForm):
     """The same as SignUpForm, without the password field"""
