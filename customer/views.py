@@ -174,9 +174,11 @@ def delete_address_confirmation(request):
 @login_required
 @user_passes_test(is_customer, login_url='customer:customerprofile-needed', redirect_field_name=None)
 def delete_address(request, address_id):
-    """Delete address from base after confirmation"""
+    """Unlink address from customer after validation. We do not want to delete the address
+    so that we can still track where past orders where billed and sent to."""
     address = Address.objects.get(id=address_id)
-    address.delete()
+    address.customer = None
+    address.save()
 
     return redirect('customer:profile')
 

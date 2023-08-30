@@ -22,7 +22,7 @@ class Address(models.Model):
     postal_code = models.CharField(max_length=10, blank=False)
     city = models.CharField(max_length=100, blank=False)
     country = models.CharField(max_length=100, blank=False)
-    customer = models.ForeignKey(CustomerProfile, on_delete=models.CASCADE)
+    customer = models.ForeignKey(CustomerProfile, on_delete=models.CASCADE, null=True)
     created = models.DateTimeField(auto_now_add=True)
     last_updated = models.DateTimeField(auto_now=True)
 
